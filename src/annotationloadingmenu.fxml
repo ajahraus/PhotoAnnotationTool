@@ -26,7 +26,12 @@
                 </Menu>
             </MenuBar>
             <Label text="Annotation file: None selected" fx:id="annotationFileLabel"/>
-            <Button text="Select and load annotation file" onMouseClicked="#selectAnnotationFile">
+            <Button text="Select annotation file" onMouseClicked="#selectAnnotationFile">
+                <padding>
+                    <Insets right="5" left="5" bottom="5" top="5"/>
+                </padding>
+            </Button>
+            <Button text="Pre-load images" onMouseClicked="#preloadPreviewMap">
                 <padding>
                     <Insets right="5" left="5" bottom="5" top="5"/>
                 </padding>

@@ -74,9 +74,7 @@ public class Controller {
             outputFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\W3103\\Annotated2");
             outputFileLocationLabel.setText("Output file location: " + outputFileLocation.toString());
 
-            Runnable task = () -> {
-                loadInBackgroundThread();
-            };
+            Runnable task = new LoadAnnotationFile();
 
             new Thread(task).start();
         }
@@ -131,9 +129,7 @@ public class Controller {
         if (selectedFile != null)
             annotationFileLocation = selectedFile.toPath();
 
-        Runnable task = () -> {
-            loadInBackgroundThread();
-        };
+        Runnable task = new LoadAnnotationFile();
 
         if (annotationFileLocation != null) {
             annotationFileLabel.setText(annotationFileLocation.toString());
@@ -141,40 +137,46 @@ public class Controller {
         }
     }
 
-    @FXML
-    private void loadAnnotationFile() throws IOException {
+    private class LoadAnnotationFile implements Runnable {
+        @Override
+        public void run() {
+            BufferedReader br;
+            try {
+                br = Files.newBufferedReader(annotationFileLocation);
+                String input;
+                annotationItems = new ArrayList<>();
+                Platform.runLater(() -> userMessagesTextArea.appendText("Loading annotation file...\n"));
 
-        BufferedReader br = Files.newBufferedReader(annotationFileLocation);
-        String input;
+                Platform.runLater(() -> annotationListView.getItems().setAll(new ArrayList<>()));
 
-        Platform.runLater(() -> userMessagesTextArea.appendText("Loading annotation file...\n"));
+                try {
+                    while ((input = br.readLine()) != null) {
 
-        try {
-            while ((input = br.readLine()) != null) {
+                        String[] itemPieces = input.split("\t");
 
-                String[] itemPieces = input.split("\t");
-
-                if (itemPieces.length != 7) {
-                    userMessagesTextArea.appendText("Warning: Line " + input + " does not have the required number of splits. Either a data " +
-                            "type is missing or there are too many tabs in this line.\n");
-                } else if (Files.exists(Paths.get(itemPieces[0])) == false) {
-                    userMessagesTextArea.appendText("Warning: File " + itemPieces[0] + " does not exit. Check that the annotation file contains the correct filepath.\n");
-                } else {
-                    AnnotationItem item = new AnnotationItem(itemPieces[0], itemPieces[1], itemPieces[2], itemPieces[3],
-                            itemPieces[4], itemPieces[5], itemPieces[6]);
-                    annotationItems.add(item);
+                        if (itemPieces.length != 7) {
+                            userMessagesTextArea.appendText("Warning: Line " + input + " does not have the required number of splits. Either a data " +
+                                    "type is missing or there are too many tabs in this line.\n");
+                        } else if (Files.exists(Paths.get(itemPieces[0])) == false) {
+                            userMessagesTextArea.appendText("Warning: File " + itemPieces[0] + " does not exit. Check that the annotation file contains the correct filepath.\n");
+                        } else {
+                            AnnotationItem item = new AnnotationItem(itemPieces[0], itemPieces[1], itemPieces[2], itemPieces[3],
+                                    itemPieces[4], itemPieces[5], itemPieces[6]);
+                            annotationItems.add(item);
+                        }
+                    }
+                } finally {
+                    if (br != null) {
+                        br.close();
+                    }
+                    Platform.runLater(() -> annotationListView.getItems().setAll(annotationItems));
+                    Platform.runLater(() -> annotationListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE));
+                    Platform.runLater(() -> userMessagesTextArea.appendText("Loading annotation file... Complete!\n"));
                 }
-            }
-        } finally {
-            if (br != null) {
-                br.close();
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
-
-        Platform.runLater(() -> annotationListView.getItems().setAll(annotationItems));
-        Platform.runLater(() -> annotationListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE));
-        Platform.runLater(() -> userMessagesTextArea.appendText("Loading annotation file... Complete!\n"));
-
     }
 
     @FXML
@@ -192,27 +194,55 @@ public class Controller {
 
     @FXML
     public void updateSelectedItemImagePreview() {
-        AnnotationItem item = (AnnotationItem) annotationListView.getSelectionModel().getSelectedItem();
+        Runnable task = new UpdateSelectedItemImagePreview();
 
-        Platform.runLater(() -> selectedAnnotationItemLabel.setText(item.toString()));
+        new Thread(task).start();
+    }
 
-        if (previewImageMap.containsKey(item)) {
-            Image image = previewImageMap.get(item);
-            Platform.runLater(() -> selectedItemImageView.setImage(image));
-        } else {
-            Platform.runLater(() -> selectedItemImageView.setImage(phImage));
-            Platform.runLater(() -> userMessagesTextArea.appendText("Image not yet loaded, please wait.\n"));
+    public class UpdateSelectedItemImagePreview implements Runnable {
+        @Override
+        public void run() {
+            AnnotationItem item = annotationListView.getSelectionModel().getSelectedItem();
+
+            Platform.runLater(() -> selectedAnnotationItemLabel.setText(item.toString()));
+
+            Image image = null;
+
+            if (previewImageMap.containsKey(item)) {
+                image = previewImageMap.get(item);
+            } else {
+                Platform.runLater(() -> selectedItemImageView.setImage(phImage));
+                Platform.runLater(() -> userMessagesTextArea.appendText("Loading image: " + item.getFilepath().getFileName() + "...\n"));
+                image = createPreviewImageUsingSwingUtilFromItem(item);
+                Platform.runLater(() -> userMessagesTextArea.appendText("Loading image: " + item.getFilepath().getFileName() + "... Complete!\n"));
+                previewImageMap.put(item, image);
+            }
+
+            final Image imageDupe = image;
+            Platform.runLater(() -> selectedItemImageView.setImage(imageDupe));
         }
+
     }
 
     @FXML
-    private void loadInBackgroundThread() {
-        try {
-            loadAnnotationFile();
-            loadPreviewMap();
-        } catch (java.io.IOException e) {
-            System.err.println(e.getMessage());
-            e.printStackTrace();
+    private void preloadPreviewMap() {
+        Runnable task = new PreloadPreviewMap();
+
+        new Thread(task).start();
+    }
+
+    private class PreloadPreviewMap implements Runnable {
+        @Override
+        public void run() {
+            Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images...\n"));
+            for (int i = 0; i < annotationItems.size(); i++) {
+                AnnotationItem item = annotationItems.get(i);
+                final double progress = (double) i / (double) annotationItems.size();
+                Platform.runLater(() -> updateCurrentProcess("Loading preview images", progress));
+                previewImageMap.putIfAbsent(item, createPreviewImageUsingSwingUtilFromItem(item));
+            }
+            Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images... Complete!\n"));
+            Platform.runLater(() -> updateCurrentProcess("None", 0));
         }
     }
 
@@ -321,18 +351,6 @@ public class Controller {
         graphics.dispose();
 
         return SwingFXUtils.toFXImage(dimg, null);
-    }
-
-    private void loadPreviewMap() {
-        Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images...\n"));
-        for (int i = 0; i < annotationItems.size(); i++) {
-            AnnotationItem item = annotationItems.get(i);
-            previewImageMap.put(item, createPreviewImageUsingSwingUtilFromItem(item));
-            final double progress = (double) i / (double) annotationItems.size();
-            Platform.runLater(() -> updateCurrentProcess("Loading preview images", progress));
-        }
-        Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images... Complete!\n"));
-        Platform.runLater(() -> updateCurrentProcess("None", 0));
     }
 
     private BufferedImage dropAlphaChannel(BufferedImage src) {
