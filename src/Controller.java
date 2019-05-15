@@ -268,6 +268,7 @@ public class Controller {
 
         Image rightLogo = new Image("ATC_Logo_Resized.jpg");
         Image leftLogo = new Image("LLC_Logo_Resized.jpg");
+        int logoHeight = 344;
 
         BufferedImage tmp = new BufferedImage(inputImage.getWidth(), inputImage.getHeight() + 800, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = tmp.createGraphics();
@@ -276,11 +277,11 @@ public class Controller {
         graphics.drawImage(inputImage, 0, 0, null);
 
         java.awt.Image leftLogoTemp = SwingFXUtils.fromFXImage(leftLogo, null).getScaledInstance(
-                300 * (int) (leftLogo.getWidth() / leftLogo.getHeight()), 300, java.awt.Image.SCALE_SMOOTH);
+                logoHeight * (int) (leftLogo.getWidth() / leftLogo.getHeight()), logoHeight, java.awt.Image.SCALE_SMOOTH);
         graphics.drawImage(leftLogoTemp, 0, inputImage.getHeight(), null);
 
         java.awt.Image rightLogoTemp = SwingFXUtils.fromFXImage(rightLogo, null).getScaledInstance(
-                300 * (int) (rightLogo.getWidth() / rightLogo.getHeight()), 300, java.awt.Image.SCALE_SMOOTH);
+                logoHeight * (int) (rightLogo.getWidth() / rightLogo.getHeight()), logoHeight, java.awt.Image.SCALE_SMOOTH);
         graphics.drawImage(rightLogoTemp, inputImage.getWidth() - rightLogoTemp.getWidth(null), inputImage.getHeight(), null);
 
         graphics.setColor(Color.BLACK);
