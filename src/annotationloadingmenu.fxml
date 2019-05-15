@@ -15,8 +15,13 @@
                         <MenuItem text="Select output file location" onAction="#selectOutputFileLocation"/>
                         <SeparatorMenuItem/>
                         <MenuItem text="Export all photos" onAction="#exportAllPhotos"/>
+                    </items>
+                </Menu>
+                <Menu text="Settings">
+                    <items>
+                        <MenuItem text="Select Left Logo" onAction="#selectLeftHandLogo"/>
                         <SeparatorMenuItem/>
-                        <MenuItem text="Exit"/>
+                        <MenuItem text="Select Right Logo" onAction="#selectRightHandLogo"/>
                     </items>
                 </Menu>
             </MenuBar>

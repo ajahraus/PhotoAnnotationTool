@@ -87,6 +87,37 @@ public class Controller {
         selectedItemImageView.setCache(true);
     }
 
+    public void selectRightHandLogo() {
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open image file for right logo");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JPEG Files", "*.jpg"),
+                new FileChooser.ExtensionFilter("PNG Files", "*.png"),
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        java.io.File selectedFile = fileChooser.showOpenDialog(primaryStage);
+
+        if (selectedFile != null)
+            rightLogo = new Image(selectedFile.getPath());
+    }
+
+    @FXML
+    public void selectLeftHandLogo() {
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open image file for left logo");
+        fileChooser.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("JPEG Files", "*.jpg"),
+                new FileChooser.ExtensionFilter("PNG Files", "*.png"),
+                new FileChooser.ExtensionFilter("All Files", "*.*")
+        );
+        java.io.File selectedFile = fileChooser.showOpenDialog(primaryStage);
+
+        if (selectedFile != null)
+            leftLogo = new Image(selectedFile.getPath());
+    }
+
     @FXML
     public void selectAnnotationFile() {
         FileChooser fileChooser = new FileChooser();
@@ -244,8 +275,11 @@ public class Controller {
         graphics.fillRect(0, inputImage.getHeight(), tmp.getWidth(), 800);
         graphics.drawImage(inputImage, 0, 0, null);
 
-        graphics.drawImage(SwingFXUtils.fromFXImage(leftLogo, null), 0, inputImage.getHeight(), null);
-        graphics.drawImage(SwingFXUtils.fromFXImage(rightLogo, null), (int) (inputImage.getWidth() - rightLogo.getWidth()), inputImage.getHeight(), null);
+        java.awt.Image leftLogoTemp = SwingFXUtils.fromFXImage(leftLogo, null).getScaledInstance(300 * (int) (leftLogo.getWidth() / leftLogo.getHeight()), 300, java.awt.Image.SCALE_SMOOTH);
+        graphics.drawImage(leftLogoTemp, 0, inputImage.getHeight(), null);
+
+        java.awt.Image rightLogoTemp = SwingFXUtils.fromFXImage(rightLogo, null).getScaledInstance(300 * (int) (rightLogo.getWidth() / rightLogo.getHeight()), 300, java.awt.Image.SCALE_SMOOTH);
+        graphics.drawImage(rightLogoTemp, (int) (inputImage.getWidth() - rightLogo.getWidth()), inputImage.getHeight(), null);
 
         graphics.setColor(Color.BLACK);
         graphics.setFont(new Font("Serif", Font.BOLD, 80));
