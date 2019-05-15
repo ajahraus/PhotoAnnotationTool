@@ -278,4 +278,23 @@ public class Controller {
         }
         Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images... Complete!\n"));
     }
+
+    public void exportAllPhotos() {
+        for (AnnotationItem item : annotationItems) {
+            if (outputFileLocation != item.getFilepath().getParent()) {
+                Image image = createImageUsingSwingUtilFromItem(item);
+                BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
+                Path newPath = outputFileLocation.resolve(item.getFilepath().getFileName());
+
+                try {
+                    ImageIO.write(bImage, "jpg", newPath.toFile());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException(e);
+                }
+            } else {
+                userMessagesTextArea.appendText("Warning: Photo " + item.getFilepath().getFileName() + " loaded from the output directory. Skipping, so as to not save over original.\n");
+            }
+        }
+    }
 }
