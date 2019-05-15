@@ -83,7 +83,7 @@ public class Controller {
 
         selectedItemImageView.setImage(phImage);
         selectedItemImageView.preserveRatioProperty().setValue(true);
-        selectedItemImageView.setFitWidth(800);
+        selectedItemImageView.setFitHeight(600);
         selectedItemImageView.setCache(true);
     }
 
@@ -275,11 +275,13 @@ public class Controller {
         graphics.fillRect(0, inputImage.getHeight(), tmp.getWidth(), 800);
         graphics.drawImage(inputImage, 0, 0, null);
 
-        java.awt.Image leftLogoTemp = SwingFXUtils.fromFXImage(leftLogo, null).getScaledInstance(300 * (int) (leftLogo.getWidth() / leftLogo.getHeight()), 300, java.awt.Image.SCALE_SMOOTH);
+        java.awt.Image leftLogoTemp = SwingFXUtils.fromFXImage(leftLogo, null).getScaledInstance(
+                300 * (int) (leftLogo.getWidth() / leftLogo.getHeight()), 300, java.awt.Image.SCALE_SMOOTH);
         graphics.drawImage(leftLogoTemp, 0, inputImage.getHeight(), null);
 
-        java.awt.Image rightLogoTemp = SwingFXUtils.fromFXImage(rightLogo, null).getScaledInstance(300 * (int) (rightLogo.getWidth() / rightLogo.getHeight()), 300, java.awt.Image.SCALE_SMOOTH);
-        graphics.drawImage(rightLogoTemp, (int) (inputImage.getWidth() - rightLogo.getWidth()), inputImage.getHeight(), null);
+        java.awt.Image rightLogoTemp = SwingFXUtils.fromFXImage(rightLogo, null).getScaledInstance(
+                300 * (int) (rightLogo.getWidth() / rightLogo.getHeight()), 300, java.awt.Image.SCALE_SMOOTH);
+        graphics.drawImage(rightLogoTemp, inputImage.getWidth() - rightLogoTemp.getWidth(null), inputImage.getHeight(), null);
 
         graphics.setColor(Color.BLACK);
         graphics.setFont(new Font("Serif", Font.BOLD, 80));
@@ -309,9 +311,9 @@ public class Controller {
 
     private Image createPreviewImageUsingSwingUtilFromItem(AnnotationItem item) {
         Image image = createImageUsingSwingUtilFromItem(item);
-        java.awt.Image tmp = SwingFXUtils.fromFXImage(image, null).getScaledInstance((int) (image.getWidth() * (800 / image.getHeight())), 800, java.awt.Image.SCALE_SMOOTH);
+        java.awt.Image tmp = SwingFXUtils.fromFXImage(image, null).getScaledInstance((int) (image.getWidth() * (600 / image.getHeight())), 600, java.awt.Image.SCALE_SMOOTH);
 
-        BufferedImage dimg = new BufferedImage((int) (image.getWidth() * (800 / image.getHeight())), 800, BufferedImage.TYPE_INT_RGB);
+        BufferedImage dimg = new BufferedImage((int) (image.getWidth() * (600 / image.getHeight())), 600, BufferedImage.TYPE_INT_RGB);
 
         Graphics2D graphics = dimg.createGraphics();
         graphics.drawImage(tmp, 0, 0, null);
@@ -330,6 +332,13 @@ public class Controller {
         }
         Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images... Complete!\n"));
         Platform.runLater(() -> updateCurrentProcess("None", 0));
+    }
+
+    private BufferedImage dropAlphaChannel(BufferedImage src) {
+        BufferedImage convertedImg = new BufferedImage(src.getWidth(), src.getHeight(), BufferedImage.TYPE_INT_RGB);
+        convertedImg.getGraphics().drawImage(src, 0, 0, null);
+
+        return convertedImg;
     }
 
     private Image createImageFromItem(AnnotationItem item) {
@@ -357,12 +366,5 @@ public class Controller {
         gc.drawImage(image, 0, 0, 800 / image.getHeight() * image.getWidth(), 800);
 
         return canvas.snapshot(null, null);
-    }
-
-    private BufferedImage dropAlphaChannel(BufferedImage src) {
-        BufferedImage convertedImg = new BufferedImage(src.getWidth(), src.getHeight(), BufferedImage.TYPE_INT_RGB);
-        convertedImg.getGraphics().drawImage(src, 0, 0, null);
-
-        return convertedImg;
     }
 }
