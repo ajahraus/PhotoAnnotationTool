@@ -67,7 +67,7 @@ public class Controller {
         rightLogo = new Image("ATC_Logo_Resized.jpg");
         leftLogo = new Image("LLC_Logo_Resized.jpg");
 
-        if (true) {
+        if (false) {
             annotationFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\W3103\\W3103_Annotate.txt");
             annotationFileLabel.setText(annotationFileLocation.toString());
 
@@ -192,6 +192,7 @@ public class Controller {
 
     public void exportAllPhotos() {
         Runnable exportTask = () -> {
+            Platform.runLater(() -> userMessagesTextArea.appendText("Exporting images..."));
             for (int i = 0; i < annotationItems.size(); i++) {
                 AnnotationItem item = annotationItems.get(i);
                 if (outputFileLocation != item.getFilepath().getParent()) {
@@ -217,6 +218,7 @@ public class Controller {
                             " loaded from the output directory. Skipping, so as to not save over original.\n"));
                 }
             }
+            Platform.runLater(() -> userMessagesTextArea.appendText("Exporting images... Complete!"));
             Platform.runLater(() -> updateCurrentProcess("None", 0));
         };
         new Thread(exportTask).start();
