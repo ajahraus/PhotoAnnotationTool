@@ -26,6 +26,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import static java.lang.Thread.yield;
+
 public class Controller {
 
     @FXML
@@ -77,6 +79,7 @@ public class Controller {
             Runnable task = new LoadAnnotationFile();
 
             new Thread(task).start();
+
         }
 
         selectedItemImageView.setImage(phImage);
@@ -129,11 +132,11 @@ public class Controller {
         if (selectedFile != null)
             annotationFileLocation = selectedFile.toPath();
 
-        Runnable task = new LoadAnnotationFile();
+        Runnable loadAnnotationFile = new LoadAnnotationFile();
 
         if (annotationFileLocation != null) {
             annotationFileLabel.setText(annotationFileLocation.toString());
-            new Thread(task).start();
+            new Thread(loadAnnotationFile).start();
         }
     }
 
@@ -194,9 +197,9 @@ public class Controller {
 
     @FXML
     public void updateSelectedItemImagePreview() {
-        Runnable task = new UpdateSelectedItemImagePreview();
+        Runnable updateSelectedItemImagePreview = new UpdateSelectedItemImagePreview();
 
-        new Thread(task).start();
+        new Thread(updateSelectedItemImagePreview).start();
     }
 
     public class UpdateSelectedItemImagePreview implements Runnable {
@@ -226,9 +229,9 @@ public class Controller {
 
     @FXML
     private void preloadPreviewMap() {
-        Runnable task = new PreloadPreviewMap();
+        Runnable preloadPreviewMap = new PreloadPreviewMap();
 
-        new Thread(task).start();
+        new Thread(preloadPreviewMap).start();
     }
 
     private class PreloadPreviewMap implements Runnable {
@@ -240,6 +243,7 @@ public class Controller {
                 final double progress = (double) i / (double) annotationItems.size();
                 Platform.runLater(() -> updateCurrentProcess("Loading preview images", progress));
                 previewImageMap.putIfAbsent(item, createPreviewImageUsingSwingUtilFromItem(item));
+                yield();
             }
             Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images... Complete!\n"));
             Platform.runLater(() -> updateCurrentProcess("None", 0));
@@ -252,7 +256,7 @@ public class Controller {
     }
 
     public void exportAllPhotos() {
-        Runnable exportTask = () -> {
+        Runnable export = () -> {
             Platform.runLater(() -> userMessagesTextArea.appendText("Exporting images..."));
             for (int i = 0; i < annotationItems.size(); i++) {
                 AnnotationItem item = annotationItems.get(i);
@@ -282,7 +286,7 @@ public class Controller {
             Platform.runLater(() -> userMessagesTextArea.appendText("Exporting images... Complete!"));
             Platform.runLater(() -> updateCurrentProcess("None", 0));
         };
-        new Thread(exportTask).start();
+        new Thread(export).start();
 
     }
 
