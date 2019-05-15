@@ -45,8 +45,8 @@ public class Controller {
     private Stage primaryStage;
     @FXML
     private ListView<AnnotationItem> annotationListView;
-    private Path outputFileLocation;
 
+    private Path outputFileLocation;
     private Path annotationFileLocation;
     private List<AnnotationItem> annotationItems;
     private Image phImage;
@@ -182,6 +182,34 @@ public class Controller {
         }
     }
 
+    public void exportAllPhotos() {
+        Runnable exportTask = () -> {
+            for (AnnotationItem item : annotationItems) {
+                if (outputFileLocation != item.getFilepath().getParent()) {
+                    Image image = createImageUsingSwingUtilFromItem(item);
+                    BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
+
+                    if (bImage.getColorModel().hasAlpha())
+                        bImage = dropAlphaChannel(bImage);
+
+                    Path newPath = outputFileLocation.resolve(item.getFilepath().getFileName());
+
+                    try {
+                        ImageIO.write(bImage, "jpg", newPath.toFile());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        throw new RuntimeException(e);
+                    }
+                } else {
+                    Platform.runLater(() -> userMessagesTextArea.appendText("Warning: Photo " + item.getFilepath().getFileName() +
+                            " loaded from the output directory. Skipping, so as to not save over original.\n"));
+                }
+            }
+        };
+        new Thread(exportTask).start();
+
+    }
+
     private Image createImageUsingSwingUtilFromItem(AnnotationItem item) {
         BufferedImage inputImage = null;
         try {
@@ -195,7 +223,7 @@ public class Controller {
         Image rightLogo = new Image("ATC_Logo_Resized.jpg");
         Image leftLogo = new Image("LLC_Logo_Resized.jpg");
 
-        BufferedImage tmp = new BufferedImage(inputImage.getWidth(), inputImage.getHeight() + 800, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage tmp = new BufferedImage(inputImage.getWidth(), inputImage.getHeight() + 800, BufferedImage.TYPE_INT_RGB);
         Graphics2D graphics = tmp.createGraphics();
         graphics.setColor(Color.WHITE);
         graphics.fillRect(0, inputImage.getHeight(), tmp.getWidth(), 800);
@@ -234,13 +262,21 @@ public class Controller {
         Image image = createImageUsingSwingUtilFromItem(item);
         java.awt.Image tmp = SwingFXUtils.fromFXImage(image, null).getScaledInstance((int) (image.getWidth() * (800 / image.getHeight())), 800, java.awt.Image.SCALE_SMOOTH);
 
-        BufferedImage dimg = new BufferedImage((int) (image.getWidth() * (800 / image.getHeight())), 800, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage dimg = new BufferedImage((int) (image.getWidth() * (800 / image.getHeight())), 800, BufferedImage.TYPE_INT_RGB);
 
         Graphics2D graphics = dimg.createGraphics();
         graphics.drawImage(tmp, 0, 0, null);
         graphics.dispose();
 
         return SwingFXUtils.toFXImage(dimg, null);
+    }
+
+    private void loadPreviewMap() {
+        Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images...\n"));
+        for (AnnotationItem item : annotationItems) {
+            previewImageMap.put(item, createPreviewImageUsingSwingUtilFromItem(item));
+        }
+        Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images... Complete!\n"));
     }
 
     private Image createImageFromItem(AnnotationItem item) {
@@ -270,31 +306,10 @@ public class Controller {
         return canvas.snapshot(null, null);
     }
 
+    public BufferedImage dropAlphaChannel(BufferedImage src) {
+        BufferedImage convertedImg = new BufferedImage(src.getWidth(), src.getHeight(), BufferedImage.TYPE_INT_RGB);
+        convertedImg.getGraphics().drawImage(src, 0, 0, null);
 
-    private void loadPreviewMap() {
-        Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images...\n"));
-        for (AnnotationItem item : annotationItems) {
-            previewImageMap.put(item, createPreviewImageUsingSwingUtilFromItem(item));
-        }
-        Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images... Complete!\n"));
-    }
-
-    public void exportAllPhotos() {
-        for (AnnotationItem item : annotationItems) {
-            if (outputFileLocation != item.getFilepath().getParent()) {
-                Image image = createImageUsingSwingUtilFromItem(item);
-                BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
-                Path newPath = outputFileLocation.resolve(item.getFilepath().getFileName());
-
-                try {
-                    ImageIO.write(bImage, "jpg", newPath.toFile());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    throw new RuntimeException(e);
-                }
-            } else {
-                userMessagesTextArea.appendText("Warning: Photo " + item.getFilepath().getFileName() + " loaded from the output directory. Skipping, so as to not save over original.\n");
-            }
-        }
+        return convertedImg;
     }
 }
