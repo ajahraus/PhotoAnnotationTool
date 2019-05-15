@@ -6,8 +6,7 @@
 <?import javafx.scene.text.Text?>
 <BorderPane fx:controller="Controller" xmlns:fx="http://javafx.com/fxml">
     <top>
-        <VBox>
-
+        <VBox spacing="10">
             <MenuBar>
                 <Menu text="File">
                     <items>
@@ -21,11 +20,7 @@
                     </items>
                 </Menu>
             </MenuBar>
-            <Label text="Annotation file: None selected" fx:id="annotationFileLabel">
-                <padding>
-                    <Insets right="10" left="10" bottom="10" top="10"/>
-                </padding>
-            </Label>
+            <Label text="Annotation file: None selected" fx:id="annotationFileLabel"/>
             <Button text="Select and load annotation file" onMouseClicked="#selectAnnotationFile">
                 <padding>
                     <Insets right="5" left="5" bottom="5" top="5"/>
@@ -77,5 +72,12 @@
             </items>
         </SplitPane>
     </center>
+    <bottom>
+        <HBox spacing="5">
+            <Label text="Current Process:"/>
+            <Label text="None" fx:id="currentProcessLabel"/>
+            <ProgressBar fx:id="currentProcessProgressBar" progress="0"/>
+        </HBox>
+    </bottom>
 </BorderPane>
 

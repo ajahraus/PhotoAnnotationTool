@@ -5,8 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
-import javafx.scene.control.SelectionMode;
+import javafx.scene.control.*;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -45,6 +44,10 @@ public class Controller {
     private Stage primaryStage;
     @FXML
     private ListView<AnnotationItem> annotationListView;
+    @FXML
+    Label currentProcessLabel;
+    @FXML
+    ProgressBar currentProcessProgressBar;
 
     private Path outputFileLocation;
     private Path annotationFileLocation;
@@ -182,9 +185,15 @@ public class Controller {
         }
     }
 
+    private void updateCurrentProcess(String progressName, double processProgress) {
+        Platform.runLater(() -> currentProcessLabel.setText(progressName));
+        Platform.runLater(() -> currentProcessProgressBar.setProgress(processProgress));
+    }
+
     public void exportAllPhotos() {
         Runnable exportTask = () -> {
-            for (AnnotationItem item : annotationItems) {
+            for (int i = 0; i < annotationItems.size(); i++) {
+                AnnotationItem item = annotationItems.get(i);
                 if (outputFileLocation != item.getFilepath().getParent()) {
                     Image image = createImageUsingSwingUtilFromItem(item);
                     BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
@@ -200,11 +209,15 @@ public class Controller {
                         e.printStackTrace();
                         throw new RuntimeException(e);
                     }
+
+                    final double progress = (double) i / (double) annotationItems.size();
+                    Platform.runLater(() -> updateCurrentProcess("Exporting images", progress));
                 } else {
                     Platform.runLater(() -> userMessagesTextArea.appendText("Warning: Photo " + item.getFilepath().getFileName() +
                             " loaded from the output directory. Skipping, so as to not save over original.\n"));
                 }
             }
+            Platform.runLater(() -> updateCurrentProcess("None", 0));
         };
         new Thread(exportTask).start();
 
@@ -273,10 +286,14 @@ public class Controller {
 
     private void loadPreviewMap() {
         Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images...\n"));
-        for (AnnotationItem item : annotationItems) {
+        for (int i = 0; i < annotationItems.size(); i++) {
+            AnnotationItem item = annotationItems.get(i);
             previewImageMap.put(item, createPreviewImageUsingSwingUtilFromItem(item));
+            final double progress = (double) i / (double) annotationItems.size();
+            Platform.runLater(() -> updateCurrentProcess("Loading preview images", progress));
         }
         Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images... Complete!\n"));
+        Platform.runLater(() -> updateCurrentProcess("None", 0));
     }
 
     private Image createImageFromItem(AnnotationItem item) {
@@ -306,7 +323,7 @@ public class Controller {
         return canvas.snapshot(null, null);
     }
 
-    public BufferedImage dropAlphaChannel(BufferedImage src) {
+    private BufferedImage dropAlphaChannel(BufferedImage src) {
         BufferedImage convertedImg = new BufferedImage(src.getWidth(), src.getHeight(), BufferedImage.TYPE_INT_RGB);
         convertedImg.getGraphics().drawImage(src, 0, 0, null);
 
