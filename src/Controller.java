@@ -26,8 +26,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static java.lang.Thread.yield;
-
 public class Controller {
 
     @FXML
@@ -129,56 +127,13 @@ public class Controller {
         );
         java.io.File selectedFile = fileChooser.showOpenDialog(primaryStage);
 
-        if (selectedFile != null)
+
+        if (selectedFile != null) {
             annotationFileLocation = selectedFile.toPath();
 
-        Runnable loadAnnotationFile = new LoadAnnotationFile();
-
-        if (annotationFileLocation != null) {
+            Runnable loadAnnotationFile = new LoadAnnotationFile();
             annotationFileLabel.setText(annotationFileLocation.toString());
             new Thread(loadAnnotationFile).start();
-        }
-    }
-
-    private class LoadAnnotationFile implements Runnable {
-        @Override
-        public void run() {
-            BufferedReader br;
-            try {
-                br = Files.newBufferedReader(annotationFileLocation);
-                String input;
-                annotationItems = new ArrayList<>();
-                Platform.runLater(() -> userMessagesTextArea.appendText("Loading annotation file...\n"));
-
-                Platform.runLater(() -> annotationListView.getItems().setAll(new ArrayList<>()));
-
-                try {
-                    while ((input = br.readLine()) != null) {
-
-                        String[] itemPieces = input.split("\t");
-
-                        if (itemPieces.length != 7) {
-                            userMessagesTextArea.appendText("Warning: Line " + input + " does not have the required number of splits. Either a data " +
-                                    "type is missing or there are too many tabs in this line.\n");
-                        } else if (Files.exists(Paths.get(itemPieces[0])) == false) {
-                            userMessagesTextArea.appendText("Warning: File " + itemPieces[0] + " does not exit. Check that the annotation file contains the correct filepath.\n");
-                        } else {
-                            AnnotationItem item = new AnnotationItem(itemPieces[0], itemPieces[1], itemPieces[2], itemPieces[3],
-                                    itemPieces[4], itemPieces[5], itemPieces[6]);
-                            annotationItems.add(item);
-                        }
-                    }
-                } finally {
-                    if (br != null) {
-                        br.close();
-                    }
-                    Platform.runLater(() -> annotationListView.getItems().setAll(annotationItems));
-                    Platform.runLater(() -> annotationListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE));
-                    Platform.runLater(() -> userMessagesTextArea.appendText("Loading annotation file... Complete!\n"));
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -203,6 +158,7 @@ public class Controller {
     }
 
     public class UpdateSelectedItemImagePreview implements Runnable {
+
         @Override
         public void run() {
             AnnotationItem item = annotationListView.getSelectionModel().getSelectedItem();
@@ -234,60 +190,16 @@ public class Controller {
         new Thread(preloadPreviewMap).start();
     }
 
-    private class PreloadPreviewMap implements Runnable {
-        @Override
-        public void run() {
-            Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images...\n"));
-            for (int i = 0; i < annotationItems.size(); i++) {
-                AnnotationItem item = annotationItems.get(i);
-                final double progress = (double) i / (double) annotationItems.size();
-                Platform.runLater(() -> updateCurrentProcess("Loading preview images", progress));
-                previewImageMap.putIfAbsent(item, createPreviewImageUsingSwingUtilFromItem(item));
-                yield();
-            }
-            Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images... Complete!\n"));
-            Platform.runLater(() -> updateCurrentProcess("None", 0));
-        }
-    }
-
     private void updateCurrentProcess(String progressName, double processProgress) {
         Platform.runLater(() -> currentProcessLabel.setText(progressName));
         Platform.runLater(() -> currentProcessProgressBar.setProgress(processProgress));
     }
 
-    public void exportAllPhotos() {
-        Runnable export = () -> {
-            Platform.runLater(() -> userMessagesTextArea.appendText("Exporting images..."));
-            for (int i = 0; i < annotationItems.size(); i++) {
-                AnnotationItem item = annotationItems.get(i);
-                if (outputFileLocation != item.getFilepath().getParent()) {
-                    Image image = createImageUsingSwingUtilFromItem(item);
-                    BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
+    @FXML
+    private void exportAllPhotos() {
+        Runnable exportAllPhotos = new ExportAllPhotos();
 
-                    if (bImage.getColorModel().hasAlpha())
-                        bImage = dropAlphaChannel(bImage);
-
-                    Path newPath = outputFileLocation.resolve(item.getFilepath().getFileName());
-
-                    try {
-                        ImageIO.write(bImage, "jpg", newPath.toFile());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new RuntimeException(e);
-                    }
-
-                    final double progress = (double) i / (double) annotationItems.size();
-                    Platform.runLater(() -> updateCurrentProcess("Exporting images", progress));
-                } else {
-                    Platform.runLater(() -> userMessagesTextArea.appendText("Warning: Photo " + item.getFilepath().getFileName() +
-                            " loaded from the output directory. Skipping, so as to not save over original.\n"));
-                }
-            }
-            Platform.runLater(() -> userMessagesTextArea.appendText("Exporting images... Complete!"));
-            Platform.runLater(() -> updateCurrentProcess("None", 0));
-        };
-        new Thread(export).start();
-
+        new Thread(exportAllPhotos).start();
     }
 
     private Image createImageUsingSwingUtilFromItem(AnnotationItem item) {
@@ -389,5 +301,133 @@ public class Controller {
         gc.drawImage(image, 0, 0, 800 / image.getHeight() * image.getWidth(), 800);
 
         return canvas.snapshot(null, null);
+    }
+
+    private abstract class ProcessingThread implements Runnable {
+        String processName;
+        double processProgress;
+
+        abstract void setProcessName();
+
+        void updateProcess() {
+            Platform.runLater(() -> updateCurrentProcess(processName, processProgress));
+        }
+    }
+
+    public class ExportAllPhotos extends ProcessingThread {
+
+        @Override
+        void setProcessName() {
+            processName = "Exporting photos";
+        }
+
+        @Override
+        public void run() {
+            Platform.runLater(() -> userMessagesTextArea.appendText("Exporting images..."));
+            for (int i = 0; i < annotationItems.size(); i++) {
+                AnnotationItem item = annotationItems.get(i);
+                if (outputFileLocation != item.getFilepath().getParent()) {
+                    Image image = createImageUsingSwingUtilFromItem(item);
+                    BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
+
+                    if (bImage.getColorModel().hasAlpha())
+                        bImage = dropAlphaChannel(bImage);
+
+                    Path newPath = outputFileLocation.resolve(item.getFilepath().getFileName());
+
+                    try {
+                        ImageIO.write(bImage, "jpg", newPath.toFile());
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        throw new RuntimeException(e);
+                    }
+
+                    processProgress = (double) i / (double) annotationItems.size();
+                    updateProcess();
+                } else {
+                    Platform.runLater(() -> userMessagesTextArea.appendText("Warning: Photo " + item.getFilepath().getFileName() +
+                            " loaded from the output directory. Skipping, so as to not save over original.\n"));
+                }
+            }
+            Platform.runLater(() -> userMessagesTextArea.appendText("Exporting images... Complete!"));
+            processName = "None";
+            processProgress = 0;
+            updateProcess();
+        }
+
+    }
+
+    private class PreloadPreviewMap extends ProcessingThread {
+        @Override
+        void setProcessName() {
+            processName = "Pre-loading Preview Images";
+        }
+
+        @Override
+        public void run() {
+            Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images...\n"));
+            for (int i = 0; i < annotationItems.size(); i++) {
+                final double progress = (double) i / (double) annotationItems.size();
+                updateProcess();
+                AnnotationItem item = annotationItems.get(i);
+                previewImageMap.putIfAbsent(item, createPreviewImageUsingSwingUtilFromItem(item));
+                // yield();
+            }
+            Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images... Complete!\n"));
+            processName = "None";
+            processProgress = 0;
+            updateProcess();
+        }
+    }
+
+    private class LoadAnnotationFile extends ProcessingThread {
+        @Override
+        void setProcessName() {
+            processName = "Loading Annotation File";
+        }
+
+        @Override
+        public void run() {
+            BufferedReader br;
+            try {
+                br = Files.newBufferedReader(annotationFileLocation);
+                String input;
+                annotationItems = new ArrayList<>();
+                Platform.runLater(() -> userMessagesTextArea.appendText("Loading annotation file...\n"));
+
+                ArrayList<String> temp = new ArrayList<String>() {{
+                    add("Annotation List Loading...");
+                }};
+                Platform.runLater(() -> annotationListView.getItems().setAll());
+
+                try {
+                    while ((input = br.readLine()) != null) {
+
+                        String[] itemPieces = input.split("\t");
+
+                        if (itemPieces.length != 7) {
+                            userMessagesTextArea.appendText("Warning: Line " + input + " does not have the required number of splits. Either a data " +
+                                    "type is missing or there are too many tabs in this line.\n");
+                        } else if (Files.exists(Paths.get(itemPieces[0])) == false) {
+                            userMessagesTextArea.appendText("Warning: File " + itemPieces[0] + " does not exit. Check that the annotation file contains the correct filepath.\n");
+                        } else {
+                            AnnotationItem item = new AnnotationItem(itemPieces[0], itemPieces[1], itemPieces[2], itemPieces[3],
+                                    itemPieces[4], itemPieces[5], itemPieces[6]);
+                            annotationItems.add(item);
+                        }
+                    }
+                } finally {
+                    if (br != null) {
+                        br.close();
+                    }
+
+                    Platform.runLater(() -> annotationListView.getItems().setAll(annotationItems));
+                    Platform.runLater(() -> annotationListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE));
+                    Platform.runLater(() -> userMessagesTextArea.appendText("Loading annotation file... Complete!\n"));
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }
