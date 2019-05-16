@@ -62,6 +62,16 @@ public class AnnotationItem {
         return filepath.getFileName().toString();
     }
 
+    public String toStringComplete() {
+        return filepath.toString() + "\t" +
+                circuitName + "\t" +
+                structureName + "\t" +
+                easting + "\t" +
+                northing + "\t" +
+                coordinateSystem + "\t" +
+                dateString;
+    }
+
     public BufferedImage getBufferedImageFromFilepath() {
         BufferedImage bufferedImage = null;
         try {
