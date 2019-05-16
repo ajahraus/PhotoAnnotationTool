@@ -31,6 +31,10 @@
                     <Insets right="5" left="5" bottom="5" top="5"/>
                 </padding>
             </Button>
+            <CheckBox fx:id="rotateImagesOnImport" text="Rotate Images on import" selected="false"
+                      onAction="#updateRotateImages">
+
+            </CheckBox>
             <Button text="Pre-load images" onMouseClicked="#preloadAllPreviewImages">
                 <padding>
                     <Insets right="5" left="5" bottom="5" top="5"/>
@@ -62,7 +66,7 @@
                                 <image/>
                             </ImageView>
                             <GridPane hgap="10" vgap="10" alignment="BOTTOM_CENTER">
-                                <Label fx:id="outputFileLocationLabel" text="Output File location: Not yet assigned"
+                                <Label fx:id="outputFileLabel" text="Output File location: Not yet assigned"
                                        GridPane.rowIndex="0" GridPane.columnIndex="0"/>
                                 <Button text="Change output location" onMouseClicked="#selectOutputFileLocation"
                                         GridPane.rowIndex="0" GridPane.columnIndex="1"/>

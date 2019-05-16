@@ -8,6 +8,7 @@ import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 
 public class AnnotationItem {
+    public boolean imageRotated;
     private Path filepath;
     private String circuitName;
     private String structureName;

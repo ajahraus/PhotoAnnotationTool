@@ -215,7 +215,7 @@ public class Controller {
 
     private void updateImageView() {
         if (currentlySelectedItem != null) {
-            if (previewImageMap.containsKey(currentlySelectedItem))
+            if (previewImageMap.containsKey(currentlySelectedItem) && currentlySelectedItem.imageRotated == rotateImages)
                 Platform.runLater(() -> selectedItemImageView.setImage(previewImageMap.get(currentlySelectedItem)));
             else {
                 loadPreviewImage(currentlySelectedItem);
@@ -273,11 +273,11 @@ public class Controller {
         public void run() {
             Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images...\n"));
             for (int i = 0; i < annotationItems.size(); i++) {
-                processName = "Pre-loading Preview Images. Number " + i + "/" + annotationItems.size();
+                processName = "Pre-loading Preview Images. Number " + (i + 1) + "/" + annotationItems.size();
                 processProgress = (double) i / annotationItems.size();
                 updateProcess();
                 AnnotationItem item = annotationItems.get(i);
-                if (!previewImageMap.containsKey(item))
+                if (!previewImageMap.containsKey(item) || item.imageRotated != rotateImages)
                     previewImageMap.put(item, createPreviewImageFromItem(item));
 
                 updateImageView();
@@ -311,8 +311,6 @@ public class Controller {
     }
 
     public class ExportAllPhotos extends ProcessingThread {
-
-
         @Override
         void setProcessName() {
             processName = "Exporting photos";
@@ -320,8 +318,14 @@ public class Controller {
 
         @Override
         public void run() {
-            Platform.runLater(() -> userMessagesTextArea.appendText("Exporting images..."));
+            processName = "Exporting Images.";
+            processProgress = 0;
+            updateProcessAndWriteToMessageArea();
+
             for (int i = 0; i < annotationItems.size(); i++) {
+                processName = "Exporting Images. Number " + (i + 1) + "/" + annotationItems.size();
+                processProgress = (double) i / (double) annotationItems.size();
+                updateProcess();
                 AnnotationItem item = annotationItems.get(i);
                 if (outputFileLocation != item.getFilepath().getParent()) {
                     Image image = createImageFromItem(item);
@@ -339,8 +343,7 @@ public class Controller {
                         throw new RuntimeException(e);
                     }
 
-                    processProgress = (double) i / (double) annotationItems.size();
-                    updateProcess();
+
                 } else {
                     Platform.runLater(() -> userMessagesTextArea.appendText("Warning: Photo " + item.getFilepath().getFileName() +
                             " loaded from the output directory. Skipping, so as to not save over original.\n"));
@@ -364,6 +367,7 @@ public class Controller {
             return phImage;
         }
 
+        item.imageRotated = rotateImages;
 
         if (rotateImages) {
             BufferedImage rotatedInputImage = new BufferedImage(inputImage.getWidth(), inputImage.getHeight(), inputImage.getType());
@@ -393,7 +397,7 @@ public class Controller {
         graphics.drawImage(rightLogoTemp, inputImage.getWidth() - rightLogoTemp.getWidth(null), inputImage.getHeight(), null);
 
         graphics.setColor(Color.BLACK);
-        graphics.setFont(new Font("Serif", Font.BOLD, 80));
+        graphics.setFont(new Font("SansSerif", Font.BOLD, 80));
         FontMetrics metrics = graphics.getFontMetrics(graphics.getFont());
 
         // This nonsense is used to actually put the text where I want it to be on the image. The drawString location is
