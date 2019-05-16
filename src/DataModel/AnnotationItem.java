@@ -21,12 +21,12 @@ public class AnnotationItem {
 
     public AnnotationItem(String filepath, String circuitName, String structureName, String easting, String northing, String coordinateSystem, String dateString) {
         this.filepath = Paths.get(filepath);
-        this.circuitName = circuitName.replace('_', ' ');
-        this.structureName = structureName.replace('_', ' ');
-        this.easting = easting.replace('_', ' ');
-        this.northing = northing.replace('_', ' ');
-        this.coordinateSystem = coordinateSystem.replace('_', ' ');
-        this.dateString = dateString.replace('_', ' ');
+        this.circuitName = circuitName;
+        this.structureName = structureName;
+        this.easting = easting;
+        this.northing = northing;
+        this.coordinateSystem = coordinateSystem;
+        this.dateString = dateString;
     }
 
     public Path getFilepath() {
@@ -55,6 +55,10 @@ public class AnnotationItem {
 
     public String getDateString() {
         return dateString;
+    }
+
+    public void removeUnderscoresFromCoordinateSystem() {
+        coordinateSystem = coordinateSystem.replace("_", " ");
     }
 
     @Override
