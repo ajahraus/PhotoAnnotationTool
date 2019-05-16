@@ -59,13 +59,7 @@ public class AnnotationItem {
 
     @Override
     public String toString() {
-        return filepath.toString() + '\t'
-                + circuitName + '\t'
-                + structureName + '\t'
-                + easting + '\t'
-                + northing + '\t'
-                + coordinateSystem + '\t'
-                + dateString + '\t';
+        return filepath.getFileName().toString();
     }
 
     public BufferedImage getBufferedImageFromFilepath() {
@@ -76,5 +70,10 @@ public class AnnotationItem {
             System.out.println(e.getMessage());
         }
         return bufferedImage;
+    }
+
+
+    static public String toString(AnnotationItem item) {
+        return item.getFilepath().getFileName().toString();
     }
 }
