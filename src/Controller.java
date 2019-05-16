@@ -56,6 +56,7 @@ public class Controller {
     private HashMap<AnnotationItem, Image> previewImageMap;
     private Image rightLogo;
     private Image leftLogo;
+    private AnnotationItem currentlySelectedItem;
 
     public void initialize() {
         annotationItems = new ArrayList<>();
@@ -66,6 +67,7 @@ public class Controller {
 
         rightLogo = new Image("ATC_Logo_Resized.jpg");
         leftLogo = new Image("LLC_Logo_Resized.jpg");
+        currentlySelectedItem = null;
 
         if (false) {
             annotationFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\W3103\\W3103_Annotate.txt");
@@ -86,6 +88,7 @@ public class Controller {
         selectedItemImageView.setCache(true);
     }
 
+    @FXML
     public void selectRightHandLogo() {
 
         FileChooser fileChooser = new FileChooser();
@@ -131,9 +134,8 @@ public class Controller {
         if (selectedFile != null) {
             annotationFileLocation = selectedFile.toPath();
 
-            Runnable loadAnnotationFile = new LoadAnnotationFile();
             annotationFileLabel.setText(annotationFileLocation.toString());
-            new Thread(loadAnnotationFile).start();
+            new Thread(new LoadAnnotationFile()).start();
         }
     }
 
@@ -151,34 +153,48 @@ public class Controller {
     }
 
     @FXML
-    public void updateSelectedItemImagePreview() {
-        Runnable updateSelectedItemImagePreview = new UpdateSelectedItemImagePreview();
-
-        new Thread(updateSelectedItemImagePreview).start();
+    private void updateSelectedItem() {
+        currentlySelectedItem = annotationListView.getSelectionModel().getSelectedItem();
+        updateImageView();
     }
 
-    public class UpdateSelectedItemImagePreview implements Runnable {
+    @FXML
+    public void updateSelectedItemImagePreview() {
+        Platform.runLater(() -> selectedAnnotationItemLabel.setText(currentlySelectedItem.toStringComplete()));
+        if (previewImageMap.containsKey(currentlySelectedItem))
+            selectedItemImageView.setImage(previewImageMap.get(currentlySelectedItem));
+        else {
+            updateImageView();
+            Platform.runLater(() -> selectedItemImageView.setImage(phImage));
+        }
+    }
+
+    private void loadPreviewImage(AnnotationItem item) {
+        LoadPreviewImage loadPreviewImage = new LoadPreviewImage(item);
+        new Thread(loadPreviewImage).start();
+    }
+
+    private class LoadPreviewImage extends ProcessingThread {
+        AnnotationItem item;
+
+        public LoadPreviewImage(AnnotationItem item) {
+            this.item = item;
+        }
+
+        @Override
+        void setProcessName() {
+            processName = "Loading preview image " + item.toString();
+        }
 
         @Override
         public void run() {
-            AnnotationItem item = annotationListView.getSelectionModel().getSelectedItem();
+            updateProcess();
+            previewImageMap.put(item, createPreviewImageUsingSwingUtilFromItem(item));
+            updateImageView();
 
-            Platform.runLater(() -> selectedAnnotationItemLabel.setText(item.toString()));
-
-            Image image = null;
-
-            if (previewImageMap.containsKey(item)) {
-                image = previewImageMap.get(item);
-            } else {
-                Platform.runLater(() -> selectedItemImageView.setImage(phImage));
-                Platform.runLater(() -> userMessagesTextArea.appendText("Loading image: " + item.getFilepath().getFileName() + "...\n"));
-                image = createPreviewImageUsingSwingUtilFromItem(item);
-                Platform.runLater(() -> userMessagesTextArea.appendText("Loading image: " + item.getFilepath().getFileName() + "... Complete!\n"));
-                previewImageMap.put(item, image);
-            }
-
-            final Image imageDupe = image;
-            Platform.runLater(() -> selectedItemImageView.setImage(imageDupe));
+            processName = "None";
+            processProgress = 0;
+            updateProcess();
         }
 
     }
@@ -371,6 +387,7 @@ public class Controller {
                 updateProcess();
                 AnnotationItem item = annotationItems.get(i);
                 previewImageMap.putIfAbsent(item, createPreviewImageUsingSwingUtilFromItem(item));
+                updateImageView();
                 // yield();
             }
             Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images... Complete!\n"));
@@ -427,6 +444,17 @@ public class Controller {
                 }
             } catch (IOException e) {
                 e.printStackTrace();
+            }
+        }
+    }
+
+    private void updateImageView() {
+        if (currentlySelectedItem != null) {
+            if (previewImageMap.containsKey(currentlySelectedItem))
+                Platform.runLater(() -> selectedItemImageView.setImage(previewImageMap.get(currentlySelectedItem)));
+            else {
+                loadPreviewImage(currentlySelectedItem);
+                Platform.runLater(() -> selectedItemImageView.setImage(phImage));
             }
         }
     }

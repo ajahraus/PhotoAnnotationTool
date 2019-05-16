@@ -43,9 +43,9 @@
             <items>
                 <SplitPane dividerPositions="0.25" focusTraversable="true" prefWidth="400">
                     <items>
-                        <ListView fx:id="annotationListView" prefWidth="300"
-                                  onKeyReleased="#updateSelectedItemImagePreview"
-                                  onMouseClicked="#updateSelectedItemImagePreview">
+                        <ListView fx:id="annotationListView" prefWidth="200"
+                                  onKeyReleased="#updateSelectedItem"
+                                  onMouseClicked="#updateSelectedItem">
                             <Text fx:id="outputText" text="Annotation file has not yet been loaded.">
                                 <font>
 
