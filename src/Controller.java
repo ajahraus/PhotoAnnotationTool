@@ -2,8 +2,8 @@ import DataModel.AnnotationItem;
 import javafx.application.Platform;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 import javafx.scene.control.*;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -29,7 +29,7 @@ public class Controller {
     @FXML
     Text outputText;
     @FXML
-    Label outputFileLocationLabel;
+    Label outputFileLabel;
     @FXML
     ImageView selectedItemImageView;
     @FXML
@@ -44,6 +44,8 @@ public class Controller {
     Label currentProcessLabel;
     @FXML
     ProgressBar currentProcessProgressBar;
+    @FXML
+    CheckBox rotateImagesOnImport;
 
     private Path outputFileLocation;
     private Path annotationFileLocation;
@@ -53,6 +55,7 @@ public class Controller {
     private Image rightLogo;
     private Image leftLogo;
     private AnnotationItem currentlySelectedItem;
+    private boolean rotateImages;
 
     public void initialize() {
         annotationItems = new ArrayList<>();
@@ -65,18 +68,17 @@ public class Controller {
         leftLogo = new Image("LLC_Logo_Resized.jpg");
         currentlySelectedItem = null;
 
-        /*
-            annotationFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\W3103\\W3103_Annotate.txt");
-            annotationFileLabel.setText(annotationFileLocation.toString());
+        updateRotateImages();
 
-            outputFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\W3103\\Annotated2");
-            outputFileLocationLabel.setText("Output file location: " + outputFileLocation.toString());
+        annotationFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\X-69\\X-69_Annotate3.txt");
+        annotationFileLabel.setText(annotationFileLocation.toString());
 
-            Runnable task = new LoadAnnotationFile();
+        outputFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\X-69\\Annotated2");
+        outputFileLabel.setText("Output file location: " + outputFileLocation.toString());
 
-            new Thread(task).start();
-        */
+        Runnable task = new LoadAnnotationFile();
 
+        new Thread(task).start();
 
         selectedItemImageView.setImage(phImage);
         selectedItemImageView.preserveRatioProperty().setValue(true);
@@ -93,7 +95,7 @@ public class Controller {
             System.err.println("No directory selected");
         } else {
             outputFileLocation = selectedDirectory;
-            outputFileLocationLabel.setText("Output file location: " + outputFileLocation.toString());
+            outputFileLabel.setText("Output file location: " + outputFileLocation.toString());
         }
     }
 
@@ -116,6 +118,10 @@ public class Controller {
         }
     }
 
+    public void updateRotateImages() {
+        rotateImages = rotateImagesOnImport.isSelected();
+    }
+
     private class LoadAnnotationFile extends ProcessingThread {
 
         @Override
@@ -130,11 +136,7 @@ public class Controller {
                 br = Files.newBufferedReader(annotationFileLocation);
                 String input;
                 annotationItems = new ArrayList<>();
-                Platform.runLater(() -> userMessagesTextArea.appendText("Loading annotation file...\n"));
-
-                ArrayList<String> temp = new ArrayList<String>() {{
-                    add("Annotation List Loading...");
-                }};
+                updateProcessAndWriteToMessageArea();
                 Platform.runLater(() -> annotationListView.getItems().setAll());
 
                 try {
@@ -150,6 +152,7 @@ public class Controller {
                         } else {
                             AnnotationItem item = new AnnotationItem(itemPieces[0], itemPieces[1], itemPieces[2], itemPieces[3],
                                     itemPieces[4], itemPieces[5], itemPieces[6]);
+                            item.removeUnderscoresFromCoordinateSystem();
                             annotationItems.add(item);
                         }
                     }
@@ -241,7 +244,7 @@ public class Controller {
 
         @Override
         public void run() {
-            updateProcess();
+            updateProcessAndWriteToMessageArea();
             previewImageMap.put(item, createPreviewImageFromItem(item));
             updateImageView();
 
@@ -290,6 +293,14 @@ public class Controller {
     private void updateCurrentProcess(String progressName, double processProgress) {
         Platform.runLater(() -> currentProcessLabel.setText(progressName));
         Platform.runLater(() -> currentProcessProgressBar.setProgress(processProgress));
+    }
+
+    private void updateCurrentProcess(String progressName, double processProgress, boolean printToUserMessages) {
+        Platform.runLater(() -> currentProcessLabel.setText(progressName));
+        Platform.runLater(() -> currentProcessProgressBar.setProgress(processProgress));
+        if (printToUserMessages)
+            Platform.runLater(() -> userMessagesTextArea.appendText(progressName + "\n"));
+
     }
 
     @FXML
@@ -353,6 +364,18 @@ public class Controller {
             return phImage;
         }
 
+
+        if (rotateImages) {
+            BufferedImage rotatedInputImage = new BufferedImage(inputImage.getWidth(), inputImage.getHeight(), inputImage.getType());
+            int h = inputImage.getHeight();
+            int w = inputImage.getWidth();
+            for (int i = 0; i < w; i++) {
+                for (int j = 0; j < h; j++) {
+                    rotatedInputImage.setRGB(w - i - 1, h - j - 1, inputImage.getRGB(i, j));
+                }
+            }
+            inputImage = rotatedInputImage;
+        }
         int logoHeight = 344;
 
         BufferedImage tmp = new BufferedImage(inputImage.getWidth(), inputImage.getHeight() + 800, BufferedImage.TYPE_INT_RGB);
@@ -424,6 +447,10 @@ public class Controller {
 
         void updateProcess() {
             Platform.runLater(() -> updateCurrentProcess(processName, processProgress));
+        }
+
+        void updateProcessAndWriteToMessageArea() {
+            Platform.runLater(() -> updateCurrentProcess(processName, processProgress, true));
         }
 
     }
