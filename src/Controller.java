@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -67,9 +68,10 @@ public class Controller {
         rightLogo = new Image("ATC_Logo_Resized.jpg");
         leftLogo = new Image("LLC_Logo_Resized.jpg");
         currentlySelectedItem = null;
+        outputFileLocation = null;
 
         updateRotateImages();
-
+        /*
         annotationFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\X-69\\X-69_Annotate3.txt");
         annotationFileLabel.setText(annotationFileLocation.toString());
 
@@ -80,6 +82,7 @@ public class Controller {
 
         new Thread(task).start();
 
+        */
         selectedItemImageView.setImage(phImage);
         selectedItemImageView.preserveRatioProperty().setValue(true);
         selectedItemImageView.setFitHeight(600);
@@ -89,14 +92,17 @@ public class Controller {
     @FXML
     private void selectOutputFileLocation() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
-        Path selectedDirectory = directoryChooser.showDialog(primaryStage).toPath();
+        File selectedDirectory = directoryChooser.showDialog(primaryStage);
 
-        if (selectedDirectory == null) {
-            System.err.println("No directory selected");
-        } else {
-            outputFileLocation = selectedDirectory;
-            outputFileLabel.setText("Output file location: " + outputFileLocation.toString());
+        if (selectedDirectory == null && outputFileLocation == null) {
+            userMessagesTextArea.appendText("No directory selected.\n");
+            return;
+        } else if (selectedDirectory != null) {
+            outputFileLocation = selectedDirectory.toPath();
         }
+        userMessagesTextArea.appendText("Output file location: " + outputFileLocation.toString() + "\n");
+        outputFileLabel.setText("Output file location: " + outputFileLocation.toString());
+
     }
 
     @FXML
@@ -228,6 +234,7 @@ public class Controller {
         LoadPreviewImage loadPreviewImage = new LoadPreviewImage(item);
         new Thread(loadPreviewImage).start();
     }
+
     private class LoadPreviewImage extends ProcessingThread {
 
         AnnotationItem item;
@@ -247,10 +254,7 @@ public class Controller {
             updateProcessAndWriteToMessageArea();
             previewImageMap.put(item, createPreviewImageFromItem(item));
             updateImageView();
-
-            processName = "None";
-            processProgress = 0;
-            updateProcess();
+            clearAndUpdateProcess();
         }
 
     }
@@ -283,9 +287,7 @@ public class Controller {
                 updateImageView();
             }
             Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images... Complete!\n"));
-            processName = "None";
-            processProgress = 0;
-            updateProcess();
+            clearAndUpdateProcess();
         }
 
     }
@@ -321,6 +323,16 @@ public class Controller {
             processName = "Exporting Images.";
             processProgress = 0;
             updateProcessAndWriteToMessageArea();
+            if (outputFileLocation == null) {
+                Platform.runLater(() -> {
+                    selectOutputFileLocation();
+                });
+                Platform.runLater(() -> {
+                    userMessagesTextArea.appendText("Select export directory before exporting images\n");
+                });
+                clearAndUpdateProcess();
+                return;
+            }
 
             for (int i = 0; i < annotationItems.size(); i++) {
                 processName = "Exporting Images. Number " + (i + 1) + "/" + annotationItems.size();
@@ -350,12 +362,10 @@ public class Controller {
                 }
             }
             Platform.runLater(() -> userMessagesTextArea.appendText("Exporting images... Complete!"));
-            processName = "None";
-            processProgress = 0;
-            updateProcess();
+            clearAndUpdateProcess();
         }
-
     }
+
 
     private Image createImageFromItem(AnnotationItem item) {
         BufferedImage inputImage = null;
@@ -434,6 +444,7 @@ public class Controller {
 
         return SwingFXUtils.toFXImage(dimg, null);
     }
+
     private BufferedImage dropAlphaChannel(BufferedImage src) {
         BufferedImage convertedImg = new BufferedImage(src.getWidth(), src.getHeight(), BufferedImage.TYPE_INT_RGB);
         convertedImg.getGraphics().drawImage(src, 0, 0, null);
@@ -442,8 +453,6 @@ public class Controller {
     }
 
     private abstract class ProcessingThread implements Runnable {
-
-
         String processName;
         double processProgress;
 
@@ -455,6 +464,12 @@ public class Controller {
 
         void updateProcessAndWriteToMessageArea() {
             Platform.runLater(() -> updateCurrentProcess(processName, processProgress, true));
+        }
+
+        void clearAndUpdateProcess() {
+            processName = "None";
+            processProgress = 0;
+            updateProcess();
         }
 
     }
