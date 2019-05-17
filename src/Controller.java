@@ -73,11 +73,11 @@ public class Controller {
         updateRotateImages();
 
 
+        /*
         annotationFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\X-69\\X-69_Annotate3.txt");
         annotationFileLabel.setText("Loaded annotation file: " + annotationFileLocation.toString());
         new Thread(new LoadAnnotationFile()).start();
 
-        /*
         annotationFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\X-69\\X-69_Annotate3.txt");
         annotationFileLabel.setText(annotationFileLocation.toString());
 
@@ -178,6 +178,7 @@ public class Controller {
                     Platform.runLater(() -> annotationListView.getItems().setAll(annotationItems));
                     Platform.runLater(() -> annotationListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE));
                     Platform.runLater(() -> userMessagesTextArea.appendText("Loading annotation file... Complete!\n"));
+                    clearAndUpdateProcess();
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -294,9 +295,13 @@ public class Controller {
 
     @FXML
     private void exportAllPhotos() {
-        Runnable exportAllPhotos = new ExportAllPhotos();
+        if (annotationFileLocation == null || !Files.exists(annotationFileLocation)) {
+            Platform.runLater(() -> userMessagesTextArea.appendText("Export failed: Annotation file not loaded\n"));
+        } else {
+            Runnable exportAllPhotos = new ExportAllPhotos();
 
-        new Thread(exportAllPhotos).start();
+            new Thread(exportAllPhotos).start();
+        }
     }
 
     public class ExportAllPhotos extends ProcessingThread {
