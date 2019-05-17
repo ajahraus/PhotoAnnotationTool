@@ -6,18 +6,8 @@
     </artifacts-to-build>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
+    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="Extend rotate image functionality">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$ExportAllPhotos.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$ExportAllPhotos.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$LoadAnnotationFile.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$LoadAnnotationFile.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$LoadPreviewImage.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$LoadPreviewImage.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$PreloadAllPreviewImages.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$PreloadAllPreviewImages.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$ProcessingThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$ProcessingThread.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/DataModel/AnnotationItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/DataModel/AnnotationItem.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/annotationloadingmenu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/annotationloadingmenu.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DataModel/AnnotationItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataModel/AnnotationItem.java" afterDir="false" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -78,8 +68,8 @@
       <file leaf-file-name="Controller.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="327">
-              <caret line="221" column="81" lean-forward="true" selection-start-line="221" selection-start-column="81" selection-end-line="221" selection-end-column="81" />
+            <state relative-caret-position="2125">
+              <caret line="295" column="5" lean-forward="true" selection-start-line="295" selection-start-column="5" selection-end-line="295" selection-end-column="5" />
               <folding>
                 <element signature="method#initialize#0;class#Controller#0" />
                 <element signature="method#selectOutputFileLocation#0;class#Controller#0" />
@@ -96,11 +86,9 @@
                 <element signature="method#exportAllPhotos#0;class#Controller#0" />
                 <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
                 <element signature="method#createImageFromItem#0;class#Controller#0" />
-                <element signature="e#13500#13612#0" />
                 <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
                 <element signature="method#dropAlphaChannel#0;class#Controller#0" />
                 <element signature="class#ProcessingThread#0;class#Controller#0" />
-                <element signature="method#updateProcessAndWriteToMes#0;class#ProcessingThread#0;class#Controller#0" />
               </folding>
             </state>
           </provider>
@@ -109,21 +97,11 @@
       <file leaf-file-name="AnnotationItem.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/DataModel/AnnotationItem.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="170">
+            <state relative-caret-position="85">
               <caret line="10" column="31" selection-start-line="10" selection-start-column="31" selection-end-line="10" selection-end-column="31" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="annotationloadingmenu.fxml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/annotationloadingmenu.fxml">
-          <provider editor-type-id="JavaFX-Scene-Builder" />
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="306">
-              <caret line="23" column="92" lean-forward="true" selection-start-line="23" selection-start-column="92" selection-end-line="23" selection-end-column="92" />
             </state>
           </provider>
         </entry>
@@ -180,7 +158,6 @@
   <component name="Git.Settings">
     <option name="PREVIOUS_COMMIT_AUTHORS">
       <list>
-        <option value="&quot;Adam Jahraus&quot; &lt;adam.jahraus@lidarservices.ca&gt;" />
         <option value="Adam Jahraus &lt;adam.jahraus@lidarservices.ca&gt;" />
       </list>
     </option>
@@ -250,8 +227,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -283,6 +258,8 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
+      <pane id="PackagesPane" />
       <pane id="AndroidView" />
     </panes>
   </component>
@@ -609,7 +586,14 @@
       <option name="project" value="LOCAL" />
       <updated>1558042261045</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Extend rotate image functionality">
+      <created>1558044312370</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1558044312370</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -627,28 +611,28 @@
       <window_info anchor="right" id="Capture Analysis" order="4" />
       <window_info anchor="bottom" id="Event Log" order="7" side_tool="true" weight="0.32930845" />
       <window_info anchor="right" id="Maven Projects" order="3" weight="0.3297619" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.20417124" />
       <window_info anchor="bottom" id="Version Control" order="7" weight="0.32930845" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.20417124" />
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32930845" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.16607143" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32930845" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
       <window_info anchor="right" id="Theme Preview" order="4" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.39956093" />
       <window_info id="Favorites" order="2" side_tool="true" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.39956093" />
       <window_info anchor="right" id="JetGradle" order="3" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Database" order="3" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32930845" />
       <window_info anchor="bottom" id="Changes" order="7" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
-      <window_info anchor="right" id="Database" order="3" />
       <window_info anchor="bottom" id="Profiler" order="7" />
       <window_info anchor="bottom" id="Problems" order="7" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Application Servers" order="7" />
     </layout>
@@ -732,7 +716,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/src/annotationTools" />
     </ignored-roots>
-    <MESSAGE value="Minor file checking improvements. Replacing most instances of IO with NIO" />
     <MESSAGE value="Updates to UI, changed to splitpane instead of relying on boarderpane" />
     <MESSAGE value="File checking when loading annotation files" />
     <MESSAGE value="Adding annotations to the preview image" />
@@ -757,7 +740,8 @@
     <MESSAGE value="Remove un-necessary functions, Re-arrange code" />
     <MESSAGE value="Remove forced removal of underscores in field names; add function to &#10;remove underscores in Coordinate system" />
     <MESSAGE value="Add image rotation functionality" />
-    <option name="LAST_COMMIT_MESSAGE" value="Add image rotation functionality" />
+    <MESSAGE value="Extend rotate image functionality" />
+    <option name="LAST_COMMIT_MESSAGE" value="Extend rotate image functionality" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
@@ -774,12 +758,20 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/src/DataModel/AnnotationItem.java">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="10" column="31" selection-start-line="10" selection-start-column="31" selection-end-line="10" selection-end-column="31" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DataModel/AnnotationItem.java">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1037">
           <caret line="80" lean-forward="true" selection-start-line="80" selection-end-line="80" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1900#1901#0" expanded="true" />
-            <element signature="e#1956#1957#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -797,8 +789,6 @@
           <caret line="78" column="5" selection-start-line="78" selection-start-column="5" selection-end-line="78" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1900#1901#0" expanded="true" />
-            <element signature="e#1956#1957#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -823,11 +813,9 @@
             <element signature="method#exportAllPhotos#0;class#Controller#0" />
             <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
             <element signature="method#createImageFromItem#0;class#Controller#0" />
-            <element signature="e#13500#13612#0" />
             <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
             <element signature="method#dropAlphaChannel#0;class#Controller#0" />
             <element signature="class#ProcessingThread#0;class#Controller#0" />
-            <element signature="method#updateProcessAndWriteToMes#0;class#ProcessingThread#0;class#Controller#0" />
           </folding>
         </state>
       </provider>
@@ -845,8 +833,6 @@
           <caret line="78" column="5" lean-forward="true" selection-start-line="78" selection-start-column="5" selection-end-line="78" selection-end-column="5" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1900#1901#0" expanded="true" />
-            <element signature="e#1956#1957#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -871,11 +857,9 @@
             <element signature="method#exportAllPhotos#0;class#Controller#0" />
             <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
             <element signature="method#createImageFromItem#0;class#Controller#0" />
-            <element signature="e#13500#13612#0" />
             <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
             <element signature="method#dropAlphaChannel#0;class#Controller#0" />
             <element signature="class#ProcessingThread#0;class#Controller#0" />
-            <element signature="method#updateProcessAndWriteToMes#0;class#ProcessingThread#0;class#Controller#0" />
           </folding>
         </state>
       </provider>
@@ -893,8 +877,6 @@
           <caret line="22" column="44" lean-forward="true" selection-start-line="22" selection-start-column="44" selection-end-line="22" selection-end-column="44" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1900#1901#0" expanded="true" />
-            <element signature="e#1956#1957#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -919,11 +901,9 @@
             <element signature="method#exportAllPhotos#0;class#Controller#0" />
             <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
             <element signature="method#createImageFromItem#0;class#Controller#0" />
-            <element signature="e#13500#13612#0" />
             <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
             <element signature="method#dropAlphaChannel#0;class#Controller#0" />
             <element signature="class#ProcessingThread#0;class#Controller#0" />
-            <element signature="method#updateProcessAndWriteToMes#0;class#ProcessingThread#0;class#Controller#0" />
           </folding>
         </state>
       </provider>
@@ -955,11 +935,9 @@
             <element signature="method#exportAllPhotos#0;class#Controller#0" />
             <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
             <element signature="method#createImageFromItem#0;class#Controller#0" />
-            <element signature="e#13500#13612#0" />
             <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
             <element signature="method#dropAlphaChannel#0;class#Controller#0" />
             <element signature="class#ProcessingThread#0;class#Controller#0" />
-            <element signature="method#updateProcessAndWriteToMes#0;class#ProcessingThread#0;class#Controller#0" />
           </folding>
         </state>
       </provider>
@@ -991,11 +969,9 @@
             <element signature="method#exportAllPhotos#0;class#Controller#0" />
             <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
             <element signature="method#createImageFromItem#0;class#Controller#0" />
-            <element signature="e#13500#13612#0" />
             <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
             <element signature="method#dropAlphaChannel#0;class#Controller#0" />
             <element signature="class#ProcessingThread#0;class#Controller#0" />
-            <element signature="method#updateProcessAndWriteToMes#0;class#ProcessingThread#0;class#Controller#0" />
           </folding>
         </state>
       </provider>
@@ -1006,8 +982,6 @@
           <caret line="72" column="20" selection-start-line="72" selection-start-column="20" selection-end-line="72" selection-end-column="20" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1900#1901#0" expanded="true" />
-            <element signature="e#1956#1957#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1039,11 +1013,9 @@
             <element signature="method#exportAllPhotos#0;class#Controller#0" />
             <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
             <element signature="method#createImageFromItem#0;class#Controller#0" />
-            <element signature="e#13500#13612#0" />
             <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
             <element signature="method#dropAlphaChannel#0;class#Controller#0" />
             <element signature="class#ProcessingThread#0;class#Controller#0" />
-            <element signature="method#updateProcessAndWriteToMes#0;class#ProcessingThread#0;class#Controller#0" />
           </folding>
         </state>
       </provider>
@@ -1054,8 +1026,6 @@
           <caret line="14" column="62" selection-start-line="14" selection-start-column="62" selection-end-line="14" selection-end-column="62" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1900#1901#0" expanded="true" />
-            <element signature="e#1956#1957#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1073,8 +1043,6 @@
           <caret line="14" column="62" selection-start-line="14" selection-start-column="62" selection-end-line="14" selection-end-column="62" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1900#1901#0" expanded="true" />
-            <element signature="e#1956#1957#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1099,11 +1067,9 @@
             <element signature="method#exportAllPhotos#0;class#Controller#0" />
             <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
             <element signature="method#createImageFromItem#0;class#Controller#0" />
-            <element signature="e#13500#13612#0" />
             <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
             <element signature="method#dropAlphaChannel#0;class#Controller#0" />
             <element signature="class#ProcessingThread#0;class#Controller#0" />
-            <element signature="method#updateProcessAndWriteToMes#0;class#ProcessingThread#0;class#Controller#0" />
           </folding>
         </state>
       </provider>
@@ -1136,11 +1102,9 @@
             <element signature="method#exportAllPhotos#0;class#Controller#0" />
             <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
             <element signature="method#createImageFromItem#0;class#Controller#0" />
-            <element signature="e#13500#13612#0" />
             <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
             <element signature="method#dropAlphaChannel#0;class#Controller#0" />
             <element signature="class#ProcessingThread#0;class#Controller#0" />
-            <element signature="method#updateProcessAndWriteToMes#0;class#ProcessingThread#0;class#Controller#0" />
           </folding>
         </state>
       </provider>
@@ -1265,17 +1229,9 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/annotationloadingmenu.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder" />
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="23" column="92" lean-forward="true" selection-start-line="23" selection-start-column="92" selection-end-line="23" selection-end-column="92" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/DataModel/AnnotationItem.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="170">
+        <state relative-caret-position="85">
           <caret line="10" column="31" selection-start-line="10" selection-start-column="31" selection-end-line="10" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -1285,8 +1241,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Controller.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="327">
-          <caret line="221" column="81" lean-forward="true" selection-start-line="221" selection-start-column="81" selection-end-line="221" selection-end-column="81" />
+        <state relative-caret-position="2125">
+          <caret line="295" column="5" lean-forward="true" selection-start-line="295" selection-start-column="5" selection-end-line="295" selection-end-column="5" />
           <folding>
             <element signature="method#initialize#0;class#Controller#0" />
             <element signature="method#selectOutputFileLocation#0;class#Controller#0" />
@@ -1303,11 +1259,9 @@
             <element signature="method#exportAllPhotos#0;class#Controller#0" />
             <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
             <element signature="method#createImageFromItem#0;class#Controller#0" />
-            <element signature="e#13500#13612#0" />
             <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
             <element signature="method#dropAlphaChannel#0;class#Controller#0" />
             <element signature="class#ProcessingThread#0;class#Controller#0" />
-            <element signature="method#updateProcessAndWriteToMes#0;class#ProcessingThread#0;class#Controller#0" />
           </folding>
         </state>
       </provider>
