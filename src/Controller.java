@@ -30,7 +30,7 @@ public class Controller {
     @FXML
     Text outputText;
     @FXML
-    Label outputFileLabel;
+    Label outputDirectoryLabel;
     @FXML
     ImageView selectedItemImageView;
     @FXML
@@ -71,16 +71,20 @@ public class Controller {
         outputFileLocation = null;
 
         updateRotateImages();
+
+
+        annotationFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\X-69\\X-69_Annotate3.txt");
+        annotationFileLabel.setText("Loaded annotation file: " + annotationFileLocation.toString());
+        new Thread(new LoadAnnotationFile()).start();
+
         /*
         annotationFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\X-69\\X-69_Annotate3.txt");
         annotationFileLabel.setText(annotationFileLocation.toString());
 
         outputFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\X-69\\Annotated2");
-        outputFileLabel.setText("Output file location: " + outputFileLocation.toString());
+        outputDirectoryLabel.setText("Output file location: " + outputFileLocation.toString());
 
-        Runnable task = new LoadAnnotationFile();
-
-        new Thread(task).start();
+        new Thread(new LoadAnnotationFile()).start();
 
         */
         selectedItemImageView.setImage(phImage);
@@ -101,9 +105,18 @@ public class Controller {
             outputFileLocation = selectedDirectory.toPath();
         }
         userMessagesTextArea.appendText("Output file location: " + outputFileLocation.toString() + "\n");
-        outputFileLabel.setText("Output file location: " + outputFileLocation.toString());
+        outputDirectoryLabel.setText("Output file location: " + outputFileLocation.toString());
+    }
+
+    private void selectOutputFileLocationAndExportPhotos() {
+        selectOutputFileLocation();
+
+        if (outputFileLocation != null)
+            new Thread(new ExportAllPhotos()).start();
 
     }
+
+
 
     @FXML
     public void selectAnnotationFile() {
@@ -119,7 +132,7 @@ public class Controller {
         if (selectedFile != null) {
             annotationFileLocation = selectedFile.toPath();
 
-            annotationFileLabel.setText(annotationFileLocation.toString());
+            annotationFileLabel.setText("Loaded annotation file: " + annotationFileLocation.toString());
             new Thread(new LoadAnnotationFile()).start();
         }
     }
@@ -139,6 +152,7 @@ public class Controller {
         public void run() {
             BufferedReader br;
             try {
+                setProcessName();
                 br = Files.newBufferedReader(annotationFileLocation);
                 String input;
                 annotationItems = new ArrayList<>();
@@ -297,14 +311,6 @@ public class Controller {
         Platform.runLater(() -> currentProcessProgressBar.setProgress(processProgress));
     }
 
-    private void updateCurrentProcess(String progressName, double processProgress, boolean printToUserMessages) {
-        Platform.runLater(() -> currentProcessLabel.setText(progressName));
-        Platform.runLater(() -> currentProcessProgressBar.setProgress(processProgress));
-        if (printToUserMessages)
-            Platform.runLater(() -> userMessagesTextArea.appendText(progressName + "\n"));
-
-    }
-
     @FXML
     private void exportAllPhotos() {
         Runnable exportAllPhotos = new ExportAllPhotos();
@@ -320,22 +326,20 @@ public class Controller {
 
         @Override
         public void run() {
-            processName = "Exporting Images.";
+            processName = "Exporting photos";
             processProgress = 0;
             updateProcessAndWriteToMessageArea();
             if (outputFileLocation == null) {
                 Platform.runLater(() -> {
-                    selectOutputFileLocation();
-                });
-                Platform.runLater(() -> {
-                    userMessagesTextArea.appendText("Select export directory before exporting images\n");
+                    userMessagesTextArea.appendText("Select export directory before exporting photos\n");
+                    selectOutputFileLocationAndExportPhotos();
                 });
                 clearAndUpdateProcess();
                 return;
             }
 
             for (int i = 0; i < annotationItems.size(); i++) {
-                processName = "Exporting Images. Number " + (i + 1) + "/" + annotationItems.size();
+                processName = "Exporting photos. Number " + (i + 1) + "/" + annotationItems.size();
                 processProgress = (double) i / (double) annotationItems.size();
                 updateProcess();
                 AnnotationItem item = annotationItems.get(i);
@@ -361,7 +365,7 @@ public class Controller {
                             " loaded from the output directory. Skipping, so as to not save over original.\n"));
                 }
             }
-            Platform.runLater(() -> userMessagesTextArea.appendText("Exporting images... Complete!"));
+            Platform.runLater(() -> userMessagesTextArea.appendText("Exporting photos... Complete!"));
             clearAndUpdateProcess();
         }
     }
@@ -463,7 +467,8 @@ public class Controller {
         }
 
         void updateProcessAndWriteToMessageArea() {
-            Platform.runLater(() -> updateCurrentProcess(processName, processProgress, true));
+            Platform.runLater(() -> updateCurrentProcess(processName, processProgress));
+            Platform.runLater(() -> userMessagesTextArea.appendText(processName + "\n"));
         }
 
         void clearAndUpdateProcess() {
