@@ -38,7 +38,7 @@ public class Controller {
     @FXML
     Label annotationFileLabel;
     @FXML
-    Stage primaryStage;
+    private Stage primaryStage;
     @FXML
     private ListView<AnnotationItem> annotationListView;
     @FXML
@@ -92,6 +92,7 @@ public class Controller {
         selectedItemImageView.setFitHeight(600);
         selectedItemImageView.setCache(true);
     }
+
 
     @FXML
     private void selectOutputFileLocation() {
