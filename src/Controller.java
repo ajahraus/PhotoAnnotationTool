@@ -38,7 +38,7 @@ public class Controller {
     @FXML
     Label annotationFileLabel;
     @FXML
-    private Stage primaryStage;
+    Stage primaryStage;
     @FXML
     private ListView<AnnotationItem> annotationListView;
     @FXML
@@ -142,17 +142,11 @@ public class Controller {
     }
 
     private class LoadAnnotationFile extends ProcessingThread {
-
-        @Override
-        void setProcessName() {
-            processName = "Loading Annotation File";
-        }
-
         @Override
         public void run() {
             BufferedReader br;
             try {
-                setProcessName();
+                processName = "Loading Annotation File";
                 br = Files.newBufferedReader(annotationFileLocation);
                 String input;
                 annotationItems = new ArrayList<>();
@@ -167,7 +161,7 @@ public class Controller {
                         if (itemPieces.length != 7) {
                             userMessagesTextArea.appendText("Warning: Line " + input + " does not have the required number of splits. Either a data " +
                                     "type is missing or there are too many tabs in this line.\n");
-                        } else if (Files.exists(Paths.get(itemPieces[0])) == false) {
+                        } else if (!Files.exists(Paths.get(itemPieces[0]))) {
                             userMessagesTextArea.appendText("Warning: File " + itemPieces[0] + " does not exit. Check that the annotation file contains the correct filepath.\n");
                         } else {
                             AnnotationItem item = new AnnotationItem(itemPieces[0], itemPieces[1], itemPieces[2], itemPieces[3],
@@ -177,9 +171,8 @@ public class Controller {
                         }
                     }
                 } finally {
-                    if (br != null) {
-                        br.close();
-                    }
+                    br.close();
+
 
                     Platform.runLater(() -> annotationListView.getItems().setAll(annotationItems));
                     Platform.runLater(() -> annotationListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE));
@@ -253,19 +246,12 @@ public class Controller {
 
         AnnotationItem item;
 
-        public LoadPreviewImage(AnnotationItem item) {
+        private LoadPreviewImage(AnnotationItem item) {
             this.item = item;
-            setProcessName();
-        }
-
-        @Override
-        void setProcessName() {
-            processName = "Loading preview image " + item.toString();
         }
 
         @Override
         public void run() {
-            updateProcessAndWriteToMessageArea();
             previewImageMap.put(item, createPreviewImageFromItem(item));
             updateImageView();
             clearAndUpdateProcess();
@@ -281,12 +267,6 @@ public class Controller {
     }
 
     private class PreloadAllPreviewImages extends ProcessingThread {
-
-        @Override
-        void setProcessName() {
-            processName = "Pre-loading Preview Images";
-        }
-
         @Override
         public void run() {
             Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images...\n"));
@@ -319,11 +299,6 @@ public class Controller {
     }
 
     public class ExportAllPhotos extends ProcessingThread {
-        @Override
-        void setProcessName() {
-            processName = "Exporting photos";
-        }
-
         @Override
         public void run() {
             processName = "Exporting photos";
@@ -372,7 +347,7 @@ public class Controller {
 
 
     private Image createImageFromItem(AnnotationItem item) {
-        BufferedImage inputImage = null;
+        BufferedImage inputImage;
         try {
             inputImage = ImageIO.read(item.getFilepath().toFile());
         } catch (IOException e) {
@@ -459,8 +434,6 @@ public class Controller {
     private abstract class ProcessingThread implements Runnable {
         String processName;
         double processProgress;
-
-        abstract void setProcessName();
 
         void updateProcess() {
             Platform.runLater(() -> updateCurrentProcess(processName, processProgress));
