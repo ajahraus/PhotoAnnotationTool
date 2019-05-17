@@ -1,7 +1,13 @@
 package DataModel;
 
+import com.drew.imaging.ImageMetadataReader;
+import com.drew.imaging.ImageProcessingException;
+import com.drew.metadata.Metadata;
+import javafx.scene.image.Image;
+
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,6 +25,7 @@ public class AnnotationItem {
     // from the annotation file. Soon this program will bypass the need for an annotation file, in which case I'll be
     // able to use a Date object and allow the user to specify date format in this program.
     private DateTimeFormatter formatter;
+    private ImageData imageData;
 
     public AnnotationItem(String filepath, String circuitName, String structureName, String easting, String northing, String coordinateSystem, String dateString) {
         this.filepath = Paths.get(filepath);
@@ -28,6 +35,7 @@ public class AnnotationItem {
         this.northing = northing;
         this.coordinateSystem = coordinateSystem;
         this.dateString = dateString;
+        this.imageData = new ImageData(this.filepath.toFile());
     }
 
     public Path getFilepath() {
@@ -90,5 +98,23 @@ public class AnnotationItem {
 
     static public String toString(AnnotationItem item) {
         return item.getFilepath().getFileName().toString();
+    }
+
+    public class ImageData {
+        private Image inputImageDownScaled;
+        private Image annotationOverlay;
+        private Metadata inputImageMetadata;
+        private int annotationAreaHeight = 800;
+
+        private ImageData(File file) {
+            try {
+                inputImageMetadata = ImageMetadataReader.readMetadata(file);
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ImageProcessingException e) {
+                e.printStackTrace();
+            }
+
+        }
     }
 }

@@ -93,7 +93,6 @@ public class Controller {
         selectedItemImageView.setCache(true);
     }
 
-
     @FXML
     private void selectOutputFileLocation() {
         DirectoryChooser directoryChooser = new DirectoryChooser();
@@ -116,8 +115,6 @@ public class Controller {
             new Thread(new ExportAllPhotos()).start();
 
     }
-
-
 
     @FXML
     public void selectAnnotationFile() {

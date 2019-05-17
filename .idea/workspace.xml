@@ -7,15 +7,18 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/com_drewnoakes_metadata_extractor_2_11_0.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PhotoAnnotationTool.iml" beforeDir="false" afterPath="$PROJECT_DIR$/PhotoAnnotationTool.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/PhotoAnnotationTool_jar/PhotoAnnotationTool.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/PhotoAnnotationTool_jar/PhotoAnnotationTool.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$ExportAllPhotos.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$ExportAllPhotos.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$LoadAnnotationFile.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$LoadAnnotationFile.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$LoadPreviewImage.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$LoadPreviewImage.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$PreloadAllPreviewImages.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$PreloadAllPreviewImages.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$ProcessingThread.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller$ProcessingThread.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/Controller.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/annotationloadingmenu.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/PhotoAnnotationTool/annotationloadingmenu.fxml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DataModel/AnnotationItem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DataModel/AnnotationItem.java" afterDir="false" />
     </list>
     <ignored path="JavaFxApplication.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -77,44 +80,52 @@
         <entry file="file://$PROJECT_DIR$/src/Main.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="85">
-              <caret line="9" column="60" lean-forward="true" selection-start-line="9" selection-start-column="60" selection-end-line="9" selection-end-column="60" />
+              <caret line="9" column="60" selection-start-line="9" selection-start-column="60" selection-end-line="9" selection-end-column="60" />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Controller.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Controller.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/Controller.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="302" column="9" selection-start-line="302" selection-start-column="9" selection-end-line="302" selection-end-column="9" />
+            <state relative-caret-position="306">
+              <caret line="94" selection-start-line="94" selection-end-line="94" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#4247#4248#0" expanded="true" />
-                <element signature="e#4311#4312#0" expanded="true" />
-                <element signature="e#9193#9194#0" expanded="true" />
-                <element signature="e#9233#9234#0" expanded="true" />
-                <element signature="e#17727#17728#0" expanded="true" />
-                <element signature="e#17826#17827#0" expanded="true" />
+                <element signature="method#initialize#0;class#Controller#0" />
+                <element signature="method#selectOutputFileLocation#0;class#Controller#0" />
+                <element signature="method#selectAnnotationFile#0;class#Controller#0" />
+                <element signature="class#LoadAnnotationFile#0;class#Controller#0" />
+                <element signature="method#run#0;class#LoadAnnotationFile#0;class#Controller#0" />
+                <element signature="method#selectRightHandLogo#0;class#Controller#0" />
+                <element signature="method#selectLeftHandLogo#0;class#Controller#0" />
+                <element signature="method#updateSelectedItem#0;class#Controller#0" />
+                <element signature="method#updateImageView#0;class#Controller#0" />
+                <element signature="method#loadPreviewImage#0;class#Controller#0" />
+                <element signature="class#LoadPreviewImage#0;class#Controller#0" />
+                <element signature="method#run#0;class#LoadPreviewImage#0;class#Controller#0" />
+                <element signature="method#preloadAllPreviewImages#0;class#Controller#0" />
+                <element signature="class#PreloadAllPreviewImages#0;class#Controller#0" />
+                <element signature="method#run#0;class#PreloadAllPreviewImages#0;class#Controller#0" />
+                <element signature="method#updateCurrentProcess#0;class#Controller#0" />
+                <element signature="method#exportAllPhotos#0;class#Controller#0" />
+                <element signature="class#ExportAllPhotos#0;class#Controller#0" />
+                <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
+                <element signature="method#createImageFromItem#0;class#Controller#0" />
+                <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
+                <element signature="method#dropAlphaChannel#0;class#Controller#0" />
+                <element signature="class#ProcessingThread#0;class#Controller#0" />
+                <element signature="method#updateProcessAndWriteToMessageArea#0;class#ProcessingThread#0;class#Controller#0" />
+                <element signature="method#clearAndUpdateProcess#0;class#ProcessingThread#0;class#Controller#0" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="annotationloadingmenu.fxml" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/annotationloadingmenu.fxml">
-          <provider editor-type-id="JavaFX-Scene-Builder" />
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="185">
-              <caret line="27" column="64" selection-start-line="27" selection-start-column="64" selection-end-line="27" selection-end-column="64" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="AnnotationItem.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="AnnotationItem.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/DataModel/AnnotationItem.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="85">
-              <caret line="10" column="31" selection-start-line="10" selection-start-column="31" selection-end-line="10" selection-end-column="31" />
+            <state relative-caret-position="1479">
+              <caret line="107" lean-forward="true" selection-start-line="107" selection-end-line="107" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -182,6 +193,11 @@
     </option>
     <option name="ROOT_SYNC" value="SYNC" />
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
     <excluded-from-favorite>
       <branch-storage>
         <map>
@@ -219,9 +235,10 @@
         <option value="$PROJECT_DIR$/src/annotationTools/DataModel/AnnotationItem.java" />
         <option value="$PROJECT_DIR$/src/annotationTools/Controller.java" />
         <option value="$PROJECT_DIR$/src/annotationloadingmenu.fxml" />
-        <option value="$PROJECT_DIR$/src/DataModel/AnnotationItem.java" />
         <option value="$PROJECT_DIR$/.idea/workspace.xml" />
         <option value="$PROJECT_DIR$/src/Controller.java" />
+        <option value="$PROJECT_DIR$/src/DataModel/ImageData.java" />
+        <option value="$PROJECT_DIR$/src/DataModel/AnnotationItem.java" />
       </list>
     </option>
   </component>
@@ -246,6 +263,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -277,12 +297,10 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
-      <pane id="PackagesPane" />
-      <pane id="AndroidView" />
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="Downloaded.Files.Path.Enabled" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="GoToFile.includeJavaFiles" value="false" />
@@ -290,10 +308,12 @@
     <property name="MemberChooser.showClasses" value="true" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="OverrideImplement.combined" value="false" />
+    <property name="Repository.Attach.JavaDocs" value="false" />
+    <property name="Repository.Attach.Sources" value="false" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="dynamic.classpath" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="project.structure.last.edited" value="Artifacts" />
+    <property name="project.structure.last.edited" value="Libraries" />
     <property name="project.structure.proportion" value="0.15" />
     <property name="project.structure.side.proportion" value="0.2" />
     <property name="recentsLimit" value="5" />
@@ -647,7 +667,14 @@
       <option name="project" value="LOCAL" />
       <updated>1558112446847</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="Prevent export from running if no annotation file has been loaded">
+      <created>1558113516414</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1558113516414</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
@@ -659,7 +686,6 @@
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" />
-      <window_info anchor="bottom" id="Messages" order="7" weight="0.32930845" />
       <window_info anchor="right" id="Palette&#9;" order="4" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
@@ -670,8 +696,7 @@
       <window_info anchor="bottom" id="Terminal" order="8" weight="0.32930845" />
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.16607143" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32930845" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.16607143" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
@@ -679,9 +704,11 @@
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39956093" />
       <window_info anchor="right" id="JetGradle" order="3" />
+      <window_info anchor="bottom" id="Messages" order="7" weight="0.32930845" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="right" id="Database" order="3" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32930845" />
       <window_info anchor="bottom" id="Changes" order="7" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Profiler" order="7" />
@@ -694,9 +721,8 @@
       <window_info anchor="bottom" id="Application Servers" order="7" />
       <window_info id="Designer" order="2" />
       <window_info anchor="right" id="Palette" order="3" />
-      <window_info anchor="right" id="JetGradle" order="4" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.20417124" />
-      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="right" id="JetGradle" order="4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="3" />
       <window_info anchor="bottom" id="Profiler" order="8" />
@@ -706,21 +732,22 @@
       <window_info anchor="right" id="Capture Analysis" order="7" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" weight="0.32930845" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Messages" order="11" weight="0.32930845" />
+      <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.16607143" />
       <window_info anchor="bottom" id="Problems" order="12" />
-      <window_info id="Image Layers" order="6" />
       <window_info anchor="bottom" id="Version Control" order="13" weight="0.32930845" />
       <window_info anchor="right" id="Maven Projects" order="5" weight="0.3297619" />
       <window_info anchor="bottom" id="Terminal" order="14" weight="0.32930845" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.6703755" visible="true" weight="0.16607143" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Database" order="6" />
       <window_info anchor="bottom" id="Message" order="0" />
-      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info id="Image Layers" order="6" />
       <window_info anchor="right" id="Palette&#9;" order="8" />
       <window_info anchor="right" id="Theme Preview" order="9" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
-      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info active="true" anchor="bottom" id="Find" order="1" visible="true" weight="0.32930845" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39956093" />
     </layout-to-restore>
@@ -770,7 +797,6 @@
     <ignored-roots>
       <path value="$PROJECT_DIR$/src/annotationTools" />
     </ignored-roots>
-    <MESSAGE value="Adding annotation sub-images (logos)" />
     <MESSAGE value="Add text overlay onto the image preview" />
     <MESSAGE value="Remove underscores '_' from annotation item if they are present in the annotation file" />
     <MESSAGE value="Project restructuring" />
@@ -795,7 +821,8 @@
     <MESSAGE value="Removed extra name from the workspace xml file." />
     <MESSAGE value="Improve process labeling, add better output file error checking" />
     <MESSAGE value="Eliminating warnings" />
-    <option name="LAST_COMMIT_MESSAGE" value="Eliminating warnings" />
+    <MESSAGE value="Prevent export from running if no annotation file has been loaded" />
+    <option name="LAST_COMMIT_MESSAGE" value="Prevent export from running if no annotation file has been loaded" />
     <option name="MAKE_NEW_CHANGELIST_ACTIVE" value="true" />
     <option name="OPTIMIZE_IMPORTS_BEFORE_PROJECT_COMMIT" value="true" />
     <option name="REFORMAT_BEFORE_PROJECT_COMMIT" value="true" />
@@ -842,13 +869,31 @@
         <state relative-caret-position="4063">
           <caret line="239" column="59" selection-start-line="239" selection-start-column="59" selection-end-line="239" selection-end-column="59" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#4247#4248#0" expanded="true" />
-            <element signature="e#4311#4312#0" expanded="true" />
-            <element signature="e#9193#9194#0" expanded="true" />
-            <element signature="e#9233#9234#0" expanded="true" />
-            <element signature="e#17727#17728#0" expanded="true" />
-            <element signature="e#17826#17827#0" expanded="true" />
+            <element signature="method#initialize#0;class#Controller#0" />
+            <element signature="method#selectOutputFileLocation#0;class#Controller#0" />
+            <element signature="method#selectAnnotationFile#0;class#Controller#0" />
+            <element signature="class#LoadAnnotationFile#0;class#Controller#0" />
+            <element signature="method#run#0;class#LoadAnnotationFile#0;class#Controller#0" />
+            <element signature="method#selectRightHandLogo#0;class#Controller#0" />
+            <element signature="method#selectLeftHandLogo#0;class#Controller#0" />
+            <element signature="method#updateSelectedItem#0;class#Controller#0" />
+            <element signature="method#updateImageView#0;class#Controller#0" />
+            <element signature="method#loadPreviewImage#0;class#Controller#0" />
+            <element signature="class#LoadPreviewImage#0;class#Controller#0" />
+            <element signature="method#run#0;class#LoadPreviewImage#0;class#Controller#0" />
+            <element signature="method#preloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="class#PreloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="method#run#0;class#PreloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="method#updateCurrentProcess#0;class#Controller#0" />
+            <element signature="method#exportAllPhotos#0;class#Controller#0" />
+            <element signature="class#ExportAllPhotos#0;class#Controller#0" />
+            <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
+            <element signature="method#createImageFromItem#0;class#Controller#0" />
+            <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
+            <element signature="method#dropAlphaChannel#0;class#Controller#0" />
+            <element signature="class#ProcessingThread#0;class#Controller#0" />
+            <element signature="method#updateProcessAndWriteToMessageArea#0;class#ProcessingThread#0;class#Controller#0" />
+            <element signature="method#clearAndUpdateProcess#0;class#ProcessingThread#0;class#Controller#0" />
           </folding>
         </state>
       </provider>
@@ -875,13 +920,31 @@
         <state relative-caret-position="4301">
           <caret line="253" column="43" lean-forward="true" selection-start-line="253" selection-start-column="43" selection-end-line="254" selection-end-column="5" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#4247#4248#0" expanded="true" />
-            <element signature="e#4311#4312#0" expanded="true" />
-            <element signature="e#9193#9194#0" expanded="true" />
-            <element signature="e#9233#9234#0" expanded="true" />
-            <element signature="e#17727#17728#0" expanded="true" />
-            <element signature="e#17826#17827#0" expanded="true" />
+            <element signature="method#initialize#0;class#Controller#0" />
+            <element signature="method#selectOutputFileLocation#0;class#Controller#0" />
+            <element signature="method#selectAnnotationFile#0;class#Controller#0" />
+            <element signature="class#LoadAnnotationFile#0;class#Controller#0" />
+            <element signature="method#run#0;class#LoadAnnotationFile#0;class#Controller#0" />
+            <element signature="method#selectRightHandLogo#0;class#Controller#0" />
+            <element signature="method#selectLeftHandLogo#0;class#Controller#0" />
+            <element signature="method#updateSelectedItem#0;class#Controller#0" />
+            <element signature="method#updateImageView#0;class#Controller#0" />
+            <element signature="method#loadPreviewImage#0;class#Controller#0" />
+            <element signature="class#LoadPreviewImage#0;class#Controller#0" />
+            <element signature="method#run#0;class#LoadPreviewImage#0;class#Controller#0" />
+            <element signature="method#preloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="class#PreloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="method#run#0;class#PreloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="method#updateCurrentProcess#0;class#Controller#0" />
+            <element signature="method#exportAllPhotos#0;class#Controller#0" />
+            <element signature="class#ExportAllPhotos#0;class#Controller#0" />
+            <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
+            <element signature="method#createImageFromItem#0;class#Controller#0" />
+            <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
+            <element signature="method#dropAlphaChannel#0;class#Controller#0" />
+            <element signature="class#ProcessingThread#0;class#Controller#0" />
+            <element signature="method#updateProcessAndWriteToMessageArea#0;class#ProcessingThread#0;class#Controller#0" />
+            <element signature="method#clearAndUpdateProcess#0;class#ProcessingThread#0;class#Controller#0" />
           </folding>
         </state>
       </provider>
@@ -908,13 +971,31 @@
         <state relative-caret-position="1870">
           <caret line="110" lean-forward="true" selection-start-line="110" selection-end-line="110" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#4247#4248#0" expanded="true" />
-            <element signature="e#4311#4312#0" expanded="true" />
-            <element signature="e#9193#9194#0" expanded="true" />
-            <element signature="e#9233#9234#0" expanded="true" />
-            <element signature="e#17727#17728#0" expanded="true" />
-            <element signature="e#17826#17827#0" expanded="true" />
+            <element signature="method#initialize#0;class#Controller#0" />
+            <element signature="method#selectOutputFileLocation#0;class#Controller#0" />
+            <element signature="method#selectAnnotationFile#0;class#Controller#0" />
+            <element signature="class#LoadAnnotationFile#0;class#Controller#0" />
+            <element signature="method#run#0;class#LoadAnnotationFile#0;class#Controller#0" />
+            <element signature="method#selectRightHandLogo#0;class#Controller#0" />
+            <element signature="method#selectLeftHandLogo#0;class#Controller#0" />
+            <element signature="method#updateSelectedItem#0;class#Controller#0" />
+            <element signature="method#updateImageView#0;class#Controller#0" />
+            <element signature="method#loadPreviewImage#0;class#Controller#0" />
+            <element signature="class#LoadPreviewImage#0;class#Controller#0" />
+            <element signature="method#run#0;class#LoadPreviewImage#0;class#Controller#0" />
+            <element signature="method#preloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="class#PreloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="method#run#0;class#PreloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="method#updateCurrentProcess#0;class#Controller#0" />
+            <element signature="method#exportAllPhotos#0;class#Controller#0" />
+            <element signature="class#ExportAllPhotos#0;class#Controller#0" />
+            <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
+            <element signature="method#createImageFromItem#0;class#Controller#0" />
+            <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
+            <element signature="method#dropAlphaChannel#0;class#Controller#0" />
+            <element signature="class#ProcessingThread#0;class#Controller#0" />
+            <element signature="method#updateProcessAndWriteToMessageArea#0;class#ProcessingThread#0;class#Controller#0" />
+            <element signature="method#clearAndUpdateProcess#0;class#ProcessingThread#0;class#Controller#0" />
           </folding>
         </state>
       </provider>
@@ -931,13 +1012,31 @@
         <state relative-caret-position="3094">
           <caret line="182" column="53" lean-forward="true" selection-start-line="182" selection-start-column="53" selection-end-line="182" selection-end-column="53" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#4247#4248#0" expanded="true" />
-            <element signature="e#4311#4312#0" expanded="true" />
-            <element signature="e#9193#9194#0" expanded="true" />
-            <element signature="e#9233#9234#0" expanded="true" />
-            <element signature="e#17727#17728#0" expanded="true" />
-            <element signature="e#17826#17827#0" expanded="true" />
+            <element signature="method#initialize#0;class#Controller#0" />
+            <element signature="method#selectOutputFileLocation#0;class#Controller#0" />
+            <element signature="method#selectAnnotationFile#0;class#Controller#0" />
+            <element signature="class#LoadAnnotationFile#0;class#Controller#0" />
+            <element signature="method#run#0;class#LoadAnnotationFile#0;class#Controller#0" />
+            <element signature="method#selectRightHandLogo#0;class#Controller#0" />
+            <element signature="method#selectLeftHandLogo#0;class#Controller#0" />
+            <element signature="method#updateSelectedItem#0;class#Controller#0" />
+            <element signature="method#updateImageView#0;class#Controller#0" />
+            <element signature="method#loadPreviewImage#0;class#Controller#0" />
+            <element signature="class#LoadPreviewImage#0;class#Controller#0" />
+            <element signature="method#run#0;class#LoadPreviewImage#0;class#Controller#0" />
+            <element signature="method#preloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="class#PreloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="method#run#0;class#PreloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="method#updateCurrentProcess#0;class#Controller#0" />
+            <element signature="method#exportAllPhotos#0;class#Controller#0" />
+            <element signature="class#ExportAllPhotos#0;class#Controller#0" />
+            <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
+            <element signature="method#createImageFromItem#0;class#Controller#0" />
+            <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
+            <element signature="method#dropAlphaChannel#0;class#Controller#0" />
+            <element signature="class#ProcessingThread#0;class#Controller#0" />
+            <element signature="method#updateProcessAndWriteToMessageArea#0;class#ProcessingThread#0;class#Controller#0" />
+            <element signature="method#clearAndUpdateProcess#0;class#ProcessingThread#0;class#Controller#0" />
           </folding>
         </state>
       </provider>
@@ -954,13 +1053,31 @@
         <state relative-caret-position="2278">
           <caret line="134" column="51" lean-forward="true" selection-start-line="134" selection-start-column="51" selection-end-line="134" selection-end-column="51" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#4247#4248#0" expanded="true" />
-            <element signature="e#4311#4312#0" expanded="true" />
-            <element signature="e#9193#9194#0" expanded="true" />
-            <element signature="e#9233#9234#0" expanded="true" />
-            <element signature="e#17727#17728#0" expanded="true" />
-            <element signature="e#17826#17827#0" expanded="true" />
+            <element signature="method#initialize#0;class#Controller#0" />
+            <element signature="method#selectOutputFileLocation#0;class#Controller#0" />
+            <element signature="method#selectAnnotationFile#0;class#Controller#0" />
+            <element signature="class#LoadAnnotationFile#0;class#Controller#0" />
+            <element signature="method#run#0;class#LoadAnnotationFile#0;class#Controller#0" />
+            <element signature="method#selectRightHandLogo#0;class#Controller#0" />
+            <element signature="method#selectLeftHandLogo#0;class#Controller#0" />
+            <element signature="method#updateSelectedItem#0;class#Controller#0" />
+            <element signature="method#updateImageView#0;class#Controller#0" />
+            <element signature="method#loadPreviewImage#0;class#Controller#0" />
+            <element signature="class#LoadPreviewImage#0;class#Controller#0" />
+            <element signature="method#run#0;class#LoadPreviewImage#0;class#Controller#0" />
+            <element signature="method#preloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="class#PreloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="method#run#0;class#PreloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="method#updateCurrentProcess#0;class#Controller#0" />
+            <element signature="method#exportAllPhotos#0;class#Controller#0" />
+            <element signature="class#ExportAllPhotos#0;class#Controller#0" />
+            <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
+            <element signature="method#createImageFromItem#0;class#Controller#0" />
+            <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
+            <element signature="method#dropAlphaChannel#0;class#Controller#0" />
+            <element signature="class#ProcessingThread#0;class#Controller#0" />
+            <element signature="method#updateProcessAndWriteToMessageArea#0;class#ProcessingThread#0;class#Controller#0" />
+            <element signature="method#clearAndUpdateProcess#0;class#ProcessingThread#0;class#Controller#0" />
           </folding>
         </state>
       </provider>
@@ -987,13 +1104,31 @@
         <state relative-caret-position="1258">
           <caret line="74" column="57" selection-start-line="74" selection-start-column="57" selection-end-line="74" selection-end-column="57" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#4247#4248#0" expanded="true" />
-            <element signature="e#4311#4312#0" expanded="true" />
-            <element signature="e#9193#9194#0" expanded="true" />
-            <element signature="e#9233#9234#0" expanded="true" />
-            <element signature="e#17727#17728#0" expanded="true" />
-            <element signature="e#17826#17827#0" expanded="true" />
+            <element signature="method#initialize#0;class#Controller#0" />
+            <element signature="method#selectOutputFileLocation#0;class#Controller#0" />
+            <element signature="method#selectAnnotationFile#0;class#Controller#0" />
+            <element signature="class#LoadAnnotationFile#0;class#Controller#0" />
+            <element signature="method#run#0;class#LoadAnnotationFile#0;class#Controller#0" />
+            <element signature="method#selectRightHandLogo#0;class#Controller#0" />
+            <element signature="method#selectLeftHandLogo#0;class#Controller#0" />
+            <element signature="method#updateSelectedItem#0;class#Controller#0" />
+            <element signature="method#updateImageView#0;class#Controller#0" />
+            <element signature="method#loadPreviewImage#0;class#Controller#0" />
+            <element signature="class#LoadPreviewImage#0;class#Controller#0" />
+            <element signature="method#run#0;class#LoadPreviewImage#0;class#Controller#0" />
+            <element signature="method#preloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="class#PreloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="method#run#0;class#PreloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="method#updateCurrentProcess#0;class#Controller#0" />
+            <element signature="method#exportAllPhotos#0;class#Controller#0" />
+            <element signature="class#ExportAllPhotos#0;class#Controller#0" />
+            <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
+            <element signature="method#createImageFromItem#0;class#Controller#0" />
+            <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
+            <element signature="method#dropAlphaChannel#0;class#Controller#0" />
+            <element signature="class#ProcessingThread#0;class#Controller#0" />
+            <element signature="method#updateProcessAndWriteToMessageArea#0;class#ProcessingThread#0;class#Controller#0" />
+            <element signature="method#clearAndUpdateProcess#0;class#ProcessingThread#0;class#Controller#0" />
           </folding>
         </state>
       </provider>
@@ -1030,13 +1165,31 @@
         <state relative-caret-position="969">
           <caret line="57" column="16" selection-start-line="57" selection-start-column="16" selection-end-line="57" selection-end-column="16" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#4247#4248#0" expanded="true" />
-            <element signature="e#4311#4312#0" expanded="true" />
-            <element signature="e#9193#9194#0" expanded="true" />
-            <element signature="e#9233#9234#0" expanded="true" />
-            <element signature="e#17727#17728#0" expanded="true" />
-            <element signature="e#17826#17827#0" expanded="true" />
+            <element signature="method#initialize#0;class#Controller#0" />
+            <element signature="method#selectOutputFileLocation#0;class#Controller#0" />
+            <element signature="method#selectAnnotationFile#0;class#Controller#0" />
+            <element signature="class#LoadAnnotationFile#0;class#Controller#0" />
+            <element signature="method#run#0;class#LoadAnnotationFile#0;class#Controller#0" />
+            <element signature="method#selectRightHandLogo#0;class#Controller#0" />
+            <element signature="method#selectLeftHandLogo#0;class#Controller#0" />
+            <element signature="method#updateSelectedItem#0;class#Controller#0" />
+            <element signature="method#updateImageView#0;class#Controller#0" />
+            <element signature="method#loadPreviewImage#0;class#Controller#0" />
+            <element signature="class#LoadPreviewImage#0;class#Controller#0" />
+            <element signature="method#run#0;class#LoadPreviewImage#0;class#Controller#0" />
+            <element signature="method#preloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="class#PreloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="method#run#0;class#PreloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="method#updateCurrentProcess#0;class#Controller#0" />
+            <element signature="method#exportAllPhotos#0;class#Controller#0" />
+            <element signature="class#ExportAllPhotos#0;class#Controller#0" />
+            <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
+            <element signature="method#createImageFromItem#0;class#Controller#0" />
+            <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
+            <element signature="method#dropAlphaChannel#0;class#Controller#0" />
+            <element signature="class#ProcessingThread#0;class#Controller#0" />
+            <element signature="method#updateProcessAndWriteToMessageArea#0;class#ProcessingThread#0;class#Controller#0" />
+            <element signature="method#clearAndUpdateProcess#0;class#ProcessingThread#0;class#Controller#0" />
           </folding>
         </state>
       </provider>
@@ -1054,13 +1207,31 @@
         <state relative-caret-position="68">
           <caret line="4" selection-start-line="4" selection-end-line="4" />
           <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#4247#4248#0" expanded="true" />
-            <element signature="e#4311#4312#0" expanded="true" />
-            <element signature="e#9193#9194#0" expanded="true" />
-            <element signature="e#9233#9234#0" expanded="true" />
-            <element signature="e#17727#17728#0" expanded="true" />
-            <element signature="e#17826#17827#0" expanded="true" />
+            <element signature="method#initialize#0;class#Controller#0" />
+            <element signature="method#selectOutputFileLocation#0;class#Controller#0" />
+            <element signature="method#selectAnnotationFile#0;class#Controller#0" />
+            <element signature="class#LoadAnnotationFile#0;class#Controller#0" />
+            <element signature="method#run#0;class#LoadAnnotationFile#0;class#Controller#0" />
+            <element signature="method#selectRightHandLogo#0;class#Controller#0" />
+            <element signature="method#selectLeftHandLogo#0;class#Controller#0" />
+            <element signature="method#updateSelectedItem#0;class#Controller#0" />
+            <element signature="method#updateImageView#0;class#Controller#0" />
+            <element signature="method#loadPreviewImage#0;class#Controller#0" />
+            <element signature="class#LoadPreviewImage#0;class#Controller#0" />
+            <element signature="method#run#0;class#LoadPreviewImage#0;class#Controller#0" />
+            <element signature="method#preloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="class#PreloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="method#run#0;class#PreloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="method#updateCurrentProcess#0;class#Controller#0" />
+            <element signature="method#exportAllPhotos#0;class#Controller#0" />
+            <element signature="class#ExportAllPhotos#0;class#Controller#0" />
+            <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
+            <element signature="method#createImageFromItem#0;class#Controller#0" />
+            <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
+            <element signature="method#dropAlphaChannel#0;class#Controller#0" />
+            <element signature="class#ProcessingThread#0;class#Controller#0" />
+            <element signature="method#updateProcessAndWriteToMessageArea#0;class#ProcessingThread#0;class#Controller#0" />
+            <element signature="method#clearAndUpdateProcess#0;class#ProcessingThread#0;class#Controller#0" />
           </folding>
         </state>
       </provider>
@@ -1171,16 +1342,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/DataModel/AnnotationItem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="10" column="31" selection-start-line="10" selection-start-column="31" selection-end-line="10" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1683">
@@ -1188,33 +1349,63 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/annotationloadingmenu.fxml">
-      <provider editor-type-id="JavaFX-Scene-Builder" />
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="185">
-          <caret line="27" column="64" selection-start-line="27" selection-start-column="64" selection-end-line="27" selection-end-column="64" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
-          <caret line="9" column="60" lean-forward="true" selection-start-line="9" selection-start-column="60" selection-end-line="9" selection-end-column="60" />
+          <caret line="9" column="60" selection-start-line="9" selection-start-column="60" selection-end-line="9" selection-end-column="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DataModel/ImageData.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" selection-start-line="6" selection-end-line="6" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/Controller.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="302" column="9" selection-start-line="302" selection-start-column="9" selection-end-line="302" selection-end-column="9" />
+        <state relative-caret-position="306">
+          <caret line="94" selection-start-line="94" selection-end-line="94" />
+          <folding>
+            <element signature="method#initialize#0;class#Controller#0" />
+            <element signature="method#selectOutputFileLocation#0;class#Controller#0" />
+            <element signature="method#selectAnnotationFile#0;class#Controller#0" />
+            <element signature="class#LoadAnnotationFile#0;class#Controller#0" />
+            <element signature="method#run#0;class#LoadAnnotationFile#0;class#Controller#0" />
+            <element signature="method#selectRightHandLogo#0;class#Controller#0" />
+            <element signature="method#selectLeftHandLogo#0;class#Controller#0" />
+            <element signature="method#updateSelectedItem#0;class#Controller#0" />
+            <element signature="method#updateImageView#0;class#Controller#0" />
+            <element signature="method#loadPreviewImage#0;class#Controller#0" />
+            <element signature="class#LoadPreviewImage#0;class#Controller#0" />
+            <element signature="method#run#0;class#LoadPreviewImage#0;class#Controller#0" />
+            <element signature="method#preloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="class#PreloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="method#run#0;class#PreloadAllPreviewImages#0;class#Controller#0" />
+            <element signature="method#updateCurrentProcess#0;class#Controller#0" />
+            <element signature="method#exportAllPhotos#0;class#Controller#0" />
+            <element signature="class#ExportAllPhotos#0;class#Controller#0" />
+            <element signature="method#run#0;class#ExportAllPhotos#0;class#Controller#0" />
+            <element signature="method#createImageFromItem#0;class#Controller#0" />
+            <element signature="method#createPreviewImageFromItem#0;class#Controller#0" />
+            <element signature="method#dropAlphaChannel#0;class#Controller#0" />
+            <element signature="class#ProcessingThread#0;class#Controller#0" />
+            <element signature="method#updateProcessAndWriteToMessageArea#0;class#ProcessingThread#0;class#Controller#0" />
+            <element signature="method#clearAndUpdateProcess#0;class#ProcessingThread#0;class#Controller#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DataModel/AnnotationItem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1479">
+          <caret line="107" lean-forward="true" selection-start-line="107" selection-end-line="107" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#4247#4248#0" expanded="true" />
-            <element signature="e#4311#4312#0" expanded="true" />
-            <element signature="e#9193#9194#0" expanded="true" />
-            <element signature="e#9233#9234#0" expanded="true" />
-            <element signature="e#17727#17728#0" expanded="true" />
-            <element signature="e#17826#17827#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1286,6 +1477,7 @@
       </state>
       <state key="ProjectLibrariesConfigurable.UI">
         <settings>
+          <last-edited>com.drewnoakes:metadata-extractor:2.11.0</last-edited>
           <splitter-proportions>
             <option name="proportions">
               <list>
