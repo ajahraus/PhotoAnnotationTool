@@ -227,7 +227,7 @@ public class Controller {
 
     private void updateImageView() {
         if (currentlySelectedItem != null) {
-            if (previewImageMap.containsKey(currentlySelectedItem) && currentlySelectedItem.imageRotated == rotateImages)
+            if (previewImageMap.containsKey(currentlySelectedItem) && currentlySelectedItem.getImageRotated() == rotateImages)
                 Platform.runLater(() -> selectedItemImageView.setImage(previewImageMap.get(currentlySelectedItem)));
             else {
                 loadPreviewImage(currentlySelectedItem);
@@ -274,7 +274,7 @@ public class Controller {
                 processProgress = (double) i / annotationItems.size();
                 updateProcess();
                 AnnotationItem item = annotationItems.get(i);
-                if (!previewImageMap.containsKey(item) || item.imageRotated != rotateImages)
+                if (!previewImageMap.containsKey(item) || item.getImageRotated() != rotateImages)
                     previewImageMap.put(item, createPreviewImageFromItem(item));
 
                 updateImageView();
@@ -359,7 +359,7 @@ public class Controller {
             return phImage;
         }
 
-        item.imageRotated = rotateImages;
+        item.setImageRotated(rotateImages);
 
         if (rotateImages) {
             BufferedImage rotatedInputImage = new BufferedImage(inputImage.getWidth(), inputImage.getHeight(), inputImage.getType());

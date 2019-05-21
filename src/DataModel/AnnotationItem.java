@@ -14,7 +14,6 @@ import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
 
 public class AnnotationItem {
-    public boolean imageRotated;
     private Path filepath;
     private String circuitName;
     private String structureName;
@@ -36,6 +35,10 @@ public class AnnotationItem {
         this.coordinateSystem = coordinateSystem;
         this.dateString = dateString;
         this.imageData = new ImageData(this.filepath.toFile());
+    }
+
+    public boolean getImageRotated() {
+        return this.imageData.imageRotated;
     }
 
     public Path getFilepath() {
@@ -68,6 +71,10 @@ public class AnnotationItem {
 
     public void removeUnderscoresFromCoordinateSystem() {
         coordinateSystem = coordinateSystem.replace("_", " ");
+    }
+
+    public void setImageRotated(boolean rotated) {
+        this.imageData.imageRotated = rotated;
     }
 
     @Override
@@ -105,13 +112,12 @@ public class AnnotationItem {
         private Image annotationOverlay;
         private Metadata inputImageMetadata;
         private int annotationAreaHeight = 800;
+        public boolean imageRotated;
 
         private ImageData(File file) {
             try {
                 inputImageMetadata = ImageMetadataReader.readMetadata(file);
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ImageProcessingException e) {
+            } catch (IOException | ImageProcessingException e) {
                 e.printStackTrace();
             }
 
