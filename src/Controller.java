@@ -361,11 +361,25 @@ public class Controller {
 
         }
 
-        @FXML
         private void preloadAllPreviewImages() {
             Runnable preloadPreviewMap = new ImageController.PreloadAllPreviewImages();
 
             new Thread(preloadPreviewMap).start();
+        }
+
+        private void loadPreviewImage(AnnotationItem item) {
+            ImageController.LoadPreviewImage loadPreviewImage = new ImageController.LoadPreviewImage(item);
+            new Thread(loadPreviewImage).start();
+        }
+
+        private void exportAllPhotos() {
+            if (annotationFileLocation == null || !Files.exists(annotationFileLocation)) {
+                Platform.runLater(() -> userMessagesTextArea.appendText("Export failed: Annotation file not loaded\n"));
+            } else {
+                Runnable exportAllPhotos = new ExportAllPhotos();
+
+                new Thread(exportAllPhotos).start();
+            }
         }
 
         private class PreloadAllPreviewImages extends ProcessingThread {
@@ -403,22 +417,6 @@ public class Controller {
                 clearAndUpdateProcess();
             }
 
-        }
-
-        private void loadPreviewImage(AnnotationItem item) {
-            ImageController.LoadPreviewImage loadPreviewImage = new ImageController.LoadPreviewImage(item);
-            new Thread(loadPreviewImage).start();
-        }
-
-        @FXML
-        private void exportAllPhotos() {
-            if (annotationFileLocation == null || !Files.exists(annotationFileLocation)) {
-                Platform.runLater(() -> userMessagesTextArea.appendText("Export failed: Annotation file not loaded\n"));
-            } else {
-                Runnable exportAllPhotos = new ExportAllPhotos();
-
-                new Thread(exportAllPhotos).start();
-            }
         }
 
         public class ExportAllPhotos extends ProcessingThread {

@@ -1,13 +1,9 @@
 package DataModel;
 
-import com.drew.imaging.ImageMetadataReader;
-import com.drew.imaging.ImageProcessingException;
-import com.drew.metadata.Metadata;
 import javafx.scene.image.Image;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,7 +30,7 @@ public class AnnotationItem {
         this.northing = northing;
         this.coordinateSystem = coordinateSystem;
         this.dateString = dateString;
-        this.imageData = new ImageData(this.filepath.toFile());
+        this.imageData = new ImageData();
     }
 
     public boolean getImageRotated() {
@@ -102,7 +98,6 @@ public class AnnotationItem {
         return bufferedImage;
     }
 
-
     static public String toString(AnnotationItem item) {
         return item.getFilepath().getFileName().toString();
     }
@@ -110,17 +105,7 @@ public class AnnotationItem {
     public class ImageData {
         private Image inputImageDownScaled;
         private Image annotationOverlay;
-        private Metadata inputImageMetadata;
         private int annotationAreaHeight = 800;
         public boolean imageRotated;
-
-        private ImageData(File file) {
-            try {
-                inputImageMetadata = ImageMetadataReader.readMetadata(file);
-            } catch (IOException | ImageProcessingException e) {
-                e.printStackTrace();
-            }
-
-        }
     }
 }
