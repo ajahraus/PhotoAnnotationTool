@@ -13,6 +13,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -51,26 +52,22 @@ public class Controller {
     private Path outputFileLocation;
     private Path annotationFileLocation;
     private List<AnnotationItem> annotationItems;
-    private Image phImage;
-    private HashMap<AnnotationItem, Image> previewImageMap;
-    private Image rightLogo;
-    private Image leftLogo;
     private AnnotationItem currentlySelectedItem;
-    private boolean rotateImages;
+    private ImageController imageController;
 
     public void initialize() {
+        imageController = new ImageController();
+        imageController.phImage = new Image("placeholder-image.jpg");
+        imageController.previewImageMap = new HashMap<>();
+        imageController.rightLogo = new Image("ATC_Logo_Resized.jpg");
+        imageController.leftLogo = new Image("LLC_Logo_Resized.jpg");
+        imageController.reader = ImageIO.getImageReadersByFormatName("jpg").next();
+
         annotationItems = new ArrayList<>();
 
-        phImage = new Image("placeholder-image.jpg");
-
-        previewImageMap = new HashMap<>();
-
-        rightLogo = new Image("ATC_Logo_Resized.jpg");
-        leftLogo = new Image("LLC_Logo_Resized.jpg");
         currentlySelectedItem = null;
         outputFileLocation = null;
-
-        updateRotateImages();
+        updateRotateImagesFromCheckbox();
 
 
         /*
@@ -87,7 +84,7 @@ public class Controller {
         new Thread(new LoadAnnotationFile()).start();
 
         */
-        selectedItemImageView.setImage(phImage);
+        selectedItemImageView.setImage(imageController.phImage);
         selectedItemImageView.preserveRatioProperty().setValue(true);
         selectedItemImageView.setFitHeight(600);
         selectedItemImageView.setCache(true);
@@ -112,8 +109,7 @@ public class Controller {
         selectOutputFileLocation();
 
         if (outputFileLocation != null)
-            new Thread(new ExportAllPhotos()).start();
-
+            imageController.exportAllPhotos();
     }
 
     @FXML
@@ -135,8 +131,18 @@ public class Controller {
         }
     }
 
-    public void updateRotateImages() {
-        rotateImages = rotateImagesOnImport.isSelected();
+    public void updateRotateImagesFromCheckbox() {
+        imageController.rotateImages = rotateImagesOnImport.isSelected();
+    }
+
+    @FXML
+    public void exportAllPhotos() {
+        imageController.exportAllPhotos();
+    }
+
+    @FXML
+    public void preloadAllPreviewImages() {
+        imageController.preloadAllPreviewImages();
     }
 
     private class LoadAnnotationFile extends ProcessingThread {
@@ -197,7 +203,7 @@ public class Controller {
         java.io.File selectedFile = fileChooser.showOpenDialog(primaryStage);
 
         if (selectedFile != null)
-            rightLogo = new Image(selectedFile.getPath());
+            imageController.rightLogo = new Image(selectedFile.getPath());
     }
 
     @FXML
@@ -213,7 +219,7 @@ public class Controller {
         java.io.File selectedFile = fileChooser.showOpenDialog(primaryStage);
 
         if (selectedFile != null)
-            leftLogo = new Image(selectedFile.getPath());
+            imageController.leftLogo = new Image(selectedFile.getPath());
     }
 
     @FXML
@@ -227,211 +233,13 @@ public class Controller {
 
     private void updateImageView() {
         if (currentlySelectedItem != null) {
-            if (previewImageMap.containsKey(currentlySelectedItem) && currentlySelectedItem.getImageRotated() == rotateImages)
-                Platform.runLater(() -> selectedItemImageView.setImage(previewImageMap.get(currentlySelectedItem)));
+            if (imageController.previewImageMap.containsKey(currentlySelectedItem) && currentlySelectedItem.getImageRotated() == imageController.rotateImages)
+                Platform.runLater(() -> selectedItemImageView.setImage(imageController.previewImageMap.get(currentlySelectedItem)));
             else {
-                loadPreviewImage(currentlySelectedItem);
-                Platform.runLater(() -> selectedItemImageView.setImage(phImage));
+                imageController.loadPreviewImage(currentlySelectedItem);
+                Platform.runLater(() -> selectedItemImageView.setImage(imageController.phImage));
             }
         }
-    }
-
-    private void loadPreviewImage(AnnotationItem item) {
-        LoadPreviewImage loadPreviewImage = new LoadPreviewImage(item);
-        new Thread(loadPreviewImage).start();
-    }
-
-    private class LoadPreviewImage extends ProcessingThread {
-
-        AnnotationItem item;
-
-        private LoadPreviewImage(AnnotationItem item) {
-            this.item = item;
-        }
-
-        @Override
-        public void run() {
-            previewImageMap.put(item, createPreviewImageFromItem(item));
-            updateImageView();
-            clearAndUpdateProcess();
-        }
-
-    }
-
-    @FXML
-    private void preloadAllPreviewImages() {
-        Runnable preloadPreviewMap = new PreloadAllPreviewImages();
-
-        new Thread(preloadPreviewMap).start();
-    }
-
-    private class PreloadAllPreviewImages extends ProcessingThread {
-        @Override
-        public void run() {
-            Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images...\n"));
-            for (int i = 0; i < annotationItems.size(); i++) {
-                processName = "Pre-loading Preview Images. Number " + (i + 1) + "/" + annotationItems.size();
-                processProgress = (double) i / annotationItems.size();
-                updateProcess();
-                AnnotationItem item = annotationItems.get(i);
-                if (!previewImageMap.containsKey(item) || item.getImageRotated() != rotateImages)
-                    previewImageMap.put(item, createPreviewImageFromItem(item));
-
-                updateImageView();
-            }
-            Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images... Complete!\n"));
-            clearAndUpdateProcess();
-        }
-
-    }
-
-    private void updateCurrentProcess(String progressName, double processProgress) {
-        Platform.runLater(() -> currentProcessLabel.setText(progressName));
-        Platform.runLater(() -> currentProcessProgressBar.setProgress(processProgress));
-    }
-
-    @FXML
-    private void exportAllPhotos() {
-        if (annotationFileLocation == null || !Files.exists(annotationFileLocation)) {
-            Platform.runLater(() -> userMessagesTextArea.appendText("Export failed: Annotation file not loaded\n"));
-        } else {
-            Runnable exportAllPhotos = new ExportAllPhotos();
-
-            new Thread(exportAllPhotos).start();
-        }
-    }
-
-    public class ExportAllPhotos extends ProcessingThread {
-        @Override
-        public void run() {
-            processName = "Exporting photos";
-            processProgress = 0;
-            updateProcessAndWriteToMessageArea();
-            if (outputFileLocation == null) {
-                Platform.runLater(() -> {
-                    userMessagesTextArea.appendText("Select export directory before exporting photos\n");
-                    selectOutputFileLocationAndExportPhotos();
-                });
-                clearAndUpdateProcess();
-                return;
-            }
-
-            for (int i = 0; i < annotationItems.size(); i++) {
-                processName = "Exporting photos. Number " + (i + 1) + "/" + annotationItems.size();
-                processProgress = (double) i / (double) annotationItems.size();
-                updateProcess();
-                AnnotationItem item = annotationItems.get(i);
-                if (outputFileLocation != item.getFilepath().getParent()) {
-                    Image image = createImageFromItem(item);
-                    BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
-
-                    if (bImage.getColorModel().hasAlpha())
-                        bImage = dropAlphaChannel(bImage);
-
-                    Path newPath = outputFileLocation.resolve(item.getFilepath().getFileName());
-
-                    try {
-                        ImageIO.write(bImage, "jpg", newPath.toFile());
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        throw new RuntimeException(e);
-                    }
-
-
-                } else {
-                    Platform.runLater(() -> userMessagesTextArea.appendText("Warning: Photo " + item.getFilepath().getFileName() +
-                            " loaded from the output directory. Skipping, so as to not save over original.\n"));
-                }
-            }
-            Platform.runLater(() -> userMessagesTextArea.appendText("Exporting photos... Complete!"));
-            clearAndUpdateProcess();
-        }
-    }
-
-
-    private Image createImageFromItem(AnnotationItem item) {
-        BufferedImage inputImage;
-        try {
-            inputImage = ImageIO.read(item.getFilepath().toFile());
-        } catch (IOException e) {
-            System.err.println(e.getMessage() + " File in question: " + item.toString());
-            e.printStackTrace();
-            return phImage;
-        }
-
-        item.setImageRotated(rotateImages);
-
-        if (rotateImages) {
-            BufferedImage rotatedInputImage = new BufferedImage(inputImage.getWidth(), inputImage.getHeight(), inputImage.getType());
-            int h = inputImage.getHeight();
-            int w = inputImage.getWidth();
-            for (int i = 0; i < w; i++) {
-                for (int j = 0; j < h; j++) {
-                    rotatedInputImage.setRGB(w - i - 1, h - j - 1, inputImage.getRGB(i, j));
-                }
-            }
-            inputImage = rotatedInputImage;
-        }
-        int logoHeight = 344;
-
-        BufferedImage tmp = new BufferedImage(inputImage.getWidth(), inputImage.getHeight() + 800, BufferedImage.TYPE_INT_RGB);
-        Graphics2D graphics = tmp.createGraphics();
-        graphics.setColor(Color.WHITE);
-        graphics.fillRect(0, inputImage.getHeight(), tmp.getWidth(), 800);
-        graphics.drawImage(inputImage, 0, 0, null);
-
-        java.awt.Image leftLogoTemp = SwingFXUtils.fromFXImage(leftLogo, null).getScaledInstance(
-                logoHeight * (int) (leftLogo.getWidth() / leftLogo.getHeight()), logoHeight, java.awt.Image.SCALE_SMOOTH);
-        graphics.drawImage(leftLogoTemp, 0, inputImage.getHeight(), null);
-
-        java.awt.Image rightLogoTemp = SwingFXUtils.fromFXImage(rightLogo, null).getScaledInstance(
-                logoHeight * (int) (rightLogo.getWidth() / rightLogo.getHeight()), logoHeight, java.awt.Image.SCALE_SMOOTH);
-        graphics.drawImage(rightLogoTemp, inputImage.getWidth() - rightLogoTemp.getWidth(null), inputImage.getHeight(), null);
-
-        graphics.setColor(Color.BLACK);
-        graphics.setFont(new Font("SansSerif", Font.BOLD, 80));
-        FontMetrics metrics = graphics.getFontMetrics(graphics.getFont());
-
-        // This nonsense is used to actually put the text where I want it to be on the image. The drawString location is
-        // always placed at the top right corner, so if you want the text to be centered, you have to calculate width of
-        // your text yourself and subtract it from the location it's being printed at.
-
-        // Centered on the top row
-        String line1 = "Line: " + item.getCircuitName() + "        " + "Structure: " + item.getStructureName();
-        graphics.drawString(line1, tmp.getWidth() / 2 - (metrics.stringWidth(line1) / 2), inputImage.getHeight() + 200);
-
-        // Centered on the middle row
-        String line2 = "E: " + item.getEasting() + "        " + "N: " + item.getNorthing();
-        graphics.drawString(line2, tmp.getWidth() / 2 - (metrics.stringWidth(line2) / 2), inputImage.getHeight() + 400);
-
-        // Centered on the bottom row
-        graphics.drawString(item.getCoordinateSystem(), tmp.getWidth() / 2 - (metrics.stringWidth(item.getCoordinateSystem()) / 2), inputImage.getHeight() + 600);
-
-        // Aligned to the right edge, side height at the bottom row
-        graphics.drawString(item.getDateString(), tmp.getWidth() - (metrics.stringWidth(item.getDateString()) + 100), inputImage.getHeight() + 600);
-
-        return SwingFXUtils.toFXImage(tmp, null);
-
-    }
-
-    private Image createPreviewImageFromItem(AnnotationItem item) {
-        Image image = createImageFromItem(item);
-        java.awt.Image tmp = SwingFXUtils.fromFXImage(image, null).getScaledInstance((int) (image.getWidth() * (600 / image.getHeight())), 600, java.awt.Image.SCALE_SMOOTH);
-
-        BufferedImage dimg = new BufferedImage((int) (image.getWidth() * (600 / image.getHeight())), 600, BufferedImage.TYPE_INT_RGB);
-
-        Graphics2D graphics = dimg.createGraphics();
-        graphics.drawImage(tmp, 0, 0, null);
-        graphics.dispose();
-
-        return SwingFXUtils.toFXImage(dimg, null);
-    }
-
-    private BufferedImage dropAlphaChannel(BufferedImage src) {
-        BufferedImage convertedImg = new BufferedImage(src.getWidth(), src.getHeight(), BufferedImage.TYPE_INT_RGB);
-        convertedImg.getGraphics().drawImage(src, 0, 0, null);
-
-        return convertedImg;
     }
 
     private abstract class ProcessingThread implements Runnable {
@@ -455,4 +263,207 @@ public class Controller {
 
     }
 
+    private void updateCurrentProcess(String progressName, double processProgress) {
+        Platform.runLater(() -> currentProcessLabel.setText(progressName));
+        Platform.runLater(() -> currentProcessProgressBar.setProgress(processProgress));
+    }
+
+    private class ImageController {
+        ImageReader reader;
+        HashMap<AnnotationItem, Image> previewImageMap;
+        Image phImage;
+        Image rightLogo;
+        Image leftLogo;
+        boolean rotateImages;
+
+        private Image createPreviewImageFromItem(AnnotationItem item) {
+            Image image = createImageFromItem(item);
+            java.awt.Image tmp = SwingFXUtils.fromFXImage(image, null).getScaledInstance((int) (image.getWidth() * (600 / image.getHeight())), 600, java.awt.Image.SCALE_SMOOTH);
+
+            BufferedImage dimg = new BufferedImage((int) (image.getWidth() * (600 / image.getHeight())), 600, BufferedImage.TYPE_INT_RGB);
+
+            Graphics2D graphics = dimg.createGraphics();
+            graphics.drawImage(tmp, 0, 0, null);
+            graphics.dispose();
+
+            return SwingFXUtils.toFXImage(dimg, null);
+        }
+
+        private BufferedImage dropAlphaChannel(BufferedImage src) {
+            BufferedImage convertedImg = new BufferedImage(src.getWidth(), src.getHeight(), BufferedImage.TYPE_INT_RGB);
+            convertedImg.getGraphics().drawImage(src, 0, 0, null);
+
+            return convertedImg;
+        }
+
+        private Image createImageFromItem(AnnotationItem item) {
+            BufferedImage inputImage;
+            try {
+                inputImage = ImageIO.read(item.getFilepath().toFile());
+            } catch (IOException e) {
+                System.err.println(e.getMessage() + " File in question: " + item.toString());
+                e.printStackTrace();
+                return phImage;
+            }
+
+            item.setImageRotated(rotateImages);
+
+            if (rotateImages) {
+                BufferedImage rotatedInputImage = new BufferedImage(inputImage.getWidth(), inputImage.getHeight(), inputImage.getType());
+                int h = inputImage.getHeight();
+                int w = inputImage.getWidth();
+                for (int i = 0; i < w; i++) {
+                    for (int j = 0; j < h; j++) {
+                        rotatedInputImage.setRGB(w - i - 1, h - j - 1, inputImage.getRGB(i, j));
+                    }
+                }
+                inputImage = rotatedInputImage;
+            }
+            int logoHeight = 344;
+
+            BufferedImage tmp = new BufferedImage(inputImage.getWidth(), inputImage.getHeight() + 800, BufferedImage.TYPE_INT_RGB);
+            Graphics2D graphics = tmp.createGraphics();
+            graphics.setColor(Color.WHITE);
+            graphics.fillRect(0, inputImage.getHeight(), tmp.getWidth(), 800);
+            graphics.drawImage(inputImage, 0, 0, null);
+
+            java.awt.Image leftLogoTemp = SwingFXUtils.fromFXImage(leftLogo, null).getScaledInstance(
+                    logoHeight * (int) (leftLogo.getWidth() / leftLogo.getHeight()), logoHeight, java.awt.Image.SCALE_SMOOTH);
+            graphics.drawImage(leftLogoTemp, 0, inputImage.getHeight(), null);
+
+            java.awt.Image rightLogoTemp = SwingFXUtils.fromFXImage(rightLogo, null).getScaledInstance(
+                    logoHeight * (int) (rightLogo.getWidth() / rightLogo.getHeight()), logoHeight, java.awt.Image.SCALE_SMOOTH);
+            graphics.drawImage(rightLogoTemp, inputImage.getWidth() - rightLogoTemp.getWidth(null), inputImage.getHeight(), null);
+
+            graphics.setColor(Color.BLACK);
+            graphics.setFont(new Font("SansSerif", Font.BOLD, 80));
+            FontMetrics metrics = graphics.getFontMetrics(graphics.getFont());
+
+            // This nonsense is used to actually put the text where I want it to be on the image. The drawString location is
+            // always placed at the top right corner, so if you want the text to be centered, you have to calculate width of
+            // your text yourself and subtract it from the location it's being printed at.
+
+            // Centered on the top row
+            String line1 = "Line: " + item.getCircuitName() + "        " + "Structure: " + item.getStructureName();
+            graphics.drawString(line1, tmp.getWidth() / 2 - (metrics.stringWidth(line1) / 2), inputImage.getHeight() + 200);
+
+            // Centered on the middle row
+            String line2 = "E: " + item.getEasting() + "        " + "N: " + item.getNorthing();
+            graphics.drawString(line2, tmp.getWidth() / 2 - (metrics.stringWidth(line2) / 2), inputImage.getHeight() + 400);
+
+            // Centered on the bottom row
+            graphics.drawString(item.getCoordinateSystem(), tmp.getWidth() / 2 - (metrics.stringWidth(item.getCoordinateSystem()) / 2), inputImage.getHeight() + 600);
+
+            // Aligned to the right edge, side height at the bottom row
+            graphics.drawString(item.getDateString(), tmp.getWidth() - (metrics.stringWidth(item.getDateString()) + 100), inputImage.getHeight() + 600);
+
+            return SwingFXUtils.toFXImage(tmp, null);
+
+        }
+
+        @FXML
+        private void preloadAllPreviewImages() {
+            Runnable preloadPreviewMap = new ImageController.PreloadAllPreviewImages();
+
+            new Thread(preloadPreviewMap).start();
+        }
+
+        private class PreloadAllPreviewImages extends ProcessingThread {
+            @Override
+            public void run() {
+                Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images...\n"));
+                for (int i = 0; i < annotationItems.size(); i++) {
+                    processName = "Pre-loading Preview Images. Number " + (i + 1) + "/" + annotationItems.size();
+                    processProgress = (double) i / annotationItems.size();
+                    updateProcess();
+                    AnnotationItem item = annotationItems.get(i);
+                    if (!previewImageMap.containsKey(item) || item.getImageRotated() != rotateImages)
+                        previewImageMap.put(item, createPreviewImageFromItem(item));
+
+                    updateImageView();
+                }
+                Platform.runLater(() -> userMessagesTextArea.appendText("Loading preview images... Complete!\n"));
+                clearAndUpdateProcess();
+            }
+
+        }
+
+        private class LoadPreviewImage extends ProcessingThread {
+
+            AnnotationItem item;
+
+            private LoadPreviewImage(AnnotationItem item) {
+                this.item = item;
+            }
+
+            @Override
+            public void run() {
+                previewImageMap.put(item, createPreviewImageFromItem(item));
+                updateImageView();
+                clearAndUpdateProcess();
+            }
+
+        }
+
+        private void loadPreviewImage(AnnotationItem item) {
+            ImageController.LoadPreviewImage loadPreviewImage = new ImageController.LoadPreviewImage(item);
+            new Thread(loadPreviewImage).start();
+        }
+
+        @FXML
+        private void exportAllPhotos() {
+            if (annotationFileLocation == null || !Files.exists(annotationFileLocation)) {
+                Platform.runLater(() -> userMessagesTextArea.appendText("Export failed: Annotation file not loaded\n"));
+            } else {
+                Runnable exportAllPhotos = new ExportAllPhotos();
+
+                new Thread(exportAllPhotos).start();
+            }
+        }
+
+        public class ExportAllPhotos extends ProcessingThread {
+            @Override
+            public void run() {
+                processName = "Exporting photos";
+                processProgress = 0;
+                updateProcessAndWriteToMessageArea();
+                if (outputFileLocation == null) {
+                    Platform.runLater(() -> {
+                        userMessagesTextArea.appendText("Select export directory before exporting photos\n");
+                        selectOutputFileLocationAndExportPhotos();
+                    });
+                    clearAndUpdateProcess();
+                    return;
+                }
+
+                for (int i = 0; i < annotationItems.size(); i++) {
+                    processName = "Exporting photos. Number " + (i + 1) + "/" + annotationItems.size();
+                    processProgress = (double) i / (double) annotationItems.size();
+                    updateProcess();
+                    AnnotationItem item = annotationItems.get(i);
+                    if (outputFileLocation != item.getFilepath().getParent()) {
+                        Image image = createImageFromItem(item);
+                        BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
+
+                        if (bImage.getColorModel().hasAlpha())
+                            bImage = dropAlphaChannel(bImage);
+
+                        Path newPath = outputFileLocation.resolve(item.getFilepath().getFileName());
+
+                        try {
+                            ImageIO.write(bImage, "jpg", newPath.toFile());
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            throw new RuntimeException(e);
+                        }
+                    } else {
+                        Platform.runLater(() -> userMessagesTextArea.appendText("Warning: Photo " + item.getFilepath().getFileName() +
+                                " loaded from the output directory. Skipping, so as to not save over original.\n"));
+                    }
+                }
+                Platform.runLater(() -> userMessagesTextArea.appendText("Exporting photos... Complete!"));
+                clearAndUpdateProcess();
+            }
+        }
+    }
 }
