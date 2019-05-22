@@ -73,10 +73,10 @@ public class Controller {
         annotationFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\X-69\\X-69_Annotate3.txt");
         annotationFileLabel.setText("Loaded annotation file: " + annotationFileLocation.toString());
         new Thread(new LoadAnnotationFile()).start();
-        /*
+
         outputFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\X-69\\Annotated2");
         outputDirectoryLabel.setText("Output file location: " + outputFileLocation.toString());
-        */
+
 
 
         selectedItemImageView.setImage(imageController.phImage);
@@ -189,7 +189,6 @@ public class Controller {
         }
 
     }
-
 
     @FXML
     public void selectRightHandLogo() {
@@ -572,7 +571,7 @@ public class Controller {
         public class ExportAllPhotos extends ProcessingThread {
             @Override
             public void run() {
-                processName = "Exporting photos";
+                processName = "Exporting " + annotationItems.size() + "photos";
                 processProgress = 0;
                 updateProcessAndWriteToMessageArea();
                 if (outputFileLocation == null) {
@@ -584,6 +583,14 @@ public class Controller {
                     return;
                 }
 
+                if (Files.notExists(outputFileLocation)) {
+                    try {
+                        Files.createDirectory(outputFileLocation);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+
                 for (int i = 0; i < annotationItems.size(); i++) {
                     processName = "Exporting photos. Number " + (i + 1) + "/" + annotationItems.size();
                     processProgress = (double) i / (double) annotationItems.size();
@@ -593,8 +600,9 @@ public class Controller {
                         Image image = createImageFromItem(item);
                         BufferedImage bImage = SwingFXUtils.fromFXImage(image, null);
 
-                        if (bImage.getColorModel().hasAlpha())
+                        if (bImage.getColorModel().hasAlpha()) {
                             bImage = dropAlphaChannel(bImage);
+                        }
 
                         Path newPath = outputFileLocation.resolve(item.getFilepath().getFileName());
 
