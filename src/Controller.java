@@ -13,7 +13,9 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
 import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
@@ -61,29 +63,20 @@ public class Controller {
         imageController.previewImageMap = new HashMap<>();
         imageController.rightLogo = new Image("ATC_Logo_Resized.jpg");
         imageController.leftLogo = new Image("LLC_Logo_Resized.jpg");
-        imageController.reader = ImageIO.getImageReadersByFormatName("jpg").next();
-
-        annotationItems = new ArrayList<>();
 
         currentlySelectedItem = null;
         outputFileLocation = null;
         updateRotateImagesFromCheckbox();
 
 
-        /*
         annotationFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\X-69\\X-69_Annotate3.txt");
         annotationFileLabel.setText("Loaded annotation file: " + annotationFileLocation.toString());
         new Thread(new LoadAnnotationFile()).start();
 
-        annotationFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\X-69\\X-69_Annotate3.txt");
-        annotationFileLabel.setText(annotationFileLocation.toString());
-
         outputFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\X-69\\Annotated2");
         outputDirectoryLabel.setText("Output file location: " + outputFileLocation.toString());
 
-        new Thread(new LoadAnnotationFile()).start();
 
-        */
         selectedItemImageView.setImage(imageController.phImage);
         selectedItemImageView.preserveRatioProperty().setValue(true);
         selectedItemImageView.setFitHeight(600);
@@ -142,7 +135,11 @@ public class Controller {
 
     @FXML
     public void preloadAllPreviewImages() {
-        imageController.preloadAllPreviewImages();
+        if (annotationListView != null && annotationItems != null && annotationItems.size() > 0)
+            imageController.preloadAllPreviewImages();
+        else
+            userMessagesTextArea.appendText("No annotation file loaded, cannot export.\n");
+
     }
 
     private class LoadAnnotationFile extends ProcessingThread {
@@ -269,14 +266,122 @@ public class Controller {
     }
 
     private class ImageController {
-        ImageReader reader;
+        // ImageReader reader;
         HashMap<AnnotationItem, Image> previewImageMap;
         Image phImage;
         Image rightLogo;
         Image leftLogo;
         boolean rotateImages;
 
+        private Image loadSubSampledImage(AnnotationItem item) {
+            File f = item.getFilepath().toFile();
+            updateRotateImagesFromCheckbox();
+            try {
+                ImageInputStream imageInputStream = ImageIO.createImageInputStream(f);
+                ImageReader reader = ImageIO.getImageReadersByFormatName("jpg").next();
+                reader.setInput(imageInputStream, true);
+
+                int subSampleFrequency = reader.read(0).getHeight() / 600;
+
+                ImageReadParam param = reader.getDefaultReadParam();
+                param.setSourceSubsampling(subSampleFrequency, subSampleFrequency, 0, 0);
+                BufferedImage outputImage = reader.read(0, param);
+
+                if (rotateImages) {
+                    BufferedImage tmp = new BufferedImage(outputImage.getWidth(), outputImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+                    Graphics2D g = tmp.createGraphics();
+                    g.rotate(Math.PI, outputImage.getWidth() / 2.0, outputImage.getHeight() / 2.0);
+                    g.drawImage(outputImage, 0, 0, null);
+                    outputImage = tmp;
+                    g.dispose();
+                }
+                item.setImageRotated(rotateImages);
+
+                imageInputStream.close();
+                reader.dispose();
+                return SwingFXUtils.toFXImage(outputImage, null);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return phImage;
+        }
+
+        private BufferedImage createAnnotationOverlay(AnnotationItem item) {
+
+            int logoHeight = 344;
+            File f = item.getFilepath().toFile();
+            try {
+                ImageInputStream imageInputStream = ImageIO.createImageInputStream(f);
+                ImageReader reader = ImageIO.getImageReadersByFormatName("jpg").next();
+                reader.setInput(imageInputStream, true);
+                int w = reader.getWidth(0);
+
+                BufferedImage tmp = new BufferedImage(w, 800, BufferedImage.TYPE_INT_RGB);
+                Graphics2D graphics = tmp.createGraphics();
+                graphics.setColor(Color.WHITE);
+                graphics.fillRect(0, 0, tmp.getWidth(), 800);
+
+                java.awt.Image leftLogoTemp = SwingFXUtils.fromFXImage(leftLogo, null).getScaledInstance(
+                        logoHeight * (int) (leftLogo.getWidth() / leftLogo.getHeight()), logoHeight, java.awt.Image.SCALE_SMOOTH);
+                graphics.drawImage(leftLogoTemp, 0, 0, null);
+
+                java.awt.Image rightLogoTemp = SwingFXUtils.fromFXImage(rightLogo, null).getScaledInstance(
+                        logoHeight * (int) (rightLogo.getWidth() / rightLogo.getHeight()), logoHeight, java.awt.Image.SCALE_SMOOTH);
+                graphics.drawImage(rightLogoTemp, w - rightLogoTemp.getWidth(null), 0, null);
+
+                graphics.setColor(Color.BLACK);
+                graphics.setFont(new Font("SansSerif", Font.BOLD, 80));
+                FontMetrics metrics = graphics.getFontMetrics(graphics.getFont());
+
+                // This nonsense is used to actually put the text where I want it to be on the image. The drawString location is
+                // always placed at the top right corner, so if you want the text to be centered, you have to calculate width of
+                // your text yourself and subtract it from the location it's being printed at.
+
+                // Centered on the top row
+                String line1 = "Line: " + item.getCircuitName() + "        " + "Structure: " + item.getStructureName();
+                graphics.drawString(line1, tmp.getWidth() / 2 - (metrics.stringWidth(line1) / 2), 200);
+
+                // Centered on the middle row
+                String line2 = "E: " + item.getEasting() + "        " + "N: " + item.getNorthing();
+                graphics.drawString(line2, tmp.getWidth() / 2 - (metrics.stringWidth(line2) / 2), 400);
+
+                // Centered on the bottom row
+                graphics.drawString(item.getCoordinateSystem(), tmp.getWidth() / 2 - (metrics.stringWidth(item.getCoordinateSystem()) / 2), 600);
+
+                // Aligned to the right edge, side height at the bottom row
+                graphics.drawString(item.getDateString(), tmp.getWidth() - (metrics.stringWidth(item.getDateString()) + 100), 600);
+
+                graphics.dispose();
+                imageInputStream.close();
+                reader.dispose();
+                return tmp;
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+
         private Image createPreviewImageFromItem(AnnotationItem item) {
+            BufferedImage subImage = SwingFXUtils.fromFXImage(loadSubSampledImage(item), null);
+            BufferedImage overlayImage = createAnnotationOverlay(item);
+
+            float scaleFactor = (float) subImage.getWidth() / (float) overlayImage.getWidth();
+
+            BufferedImage outputImage = new BufferedImage(subImage.getWidth(), (int) (subImage.getHeight() + (overlayImage.getHeight() * scaleFactor)), BufferedImage.TYPE_INT_RGB);
+
+            java.awt.Image tmp = overlayImage.getScaledInstance(subImage.getWidth(), (int) (overlayImage.getHeight() * scaleFactor), 0);
+            Graphics2D graphics2D = outputImage.createGraphics();
+            graphics2D.drawImage(subImage, 0, 0, null);
+            graphics2D.drawImage(tmp, 0, subImage.getHeight(), null);
+            graphics2D.dispose();
+
+            return SwingFXUtils.toFXImage(outputImage, null);
+        }
+
+        private Image createPreviewImageFromItemAlt(AnnotationItem item) {
             Image image = createImageFromItem(item);
             java.awt.Image tmp = SwingFXUtils.fromFXImage(image, null).getScaledInstance((int) (image.getWidth() * (600 / image.getHeight())), 600, java.awt.Image.SCALE_SMOOTH);
 
