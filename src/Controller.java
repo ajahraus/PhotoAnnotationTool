@@ -63,6 +63,7 @@ public class Controller {
         imageController.previewImageMap = new HashMap<>();
         imageController.rightLogo = new Image("ATC_Logo_Resized.jpg");
         imageController.leftLogo = new Image("LLC_Logo_Resized.jpg");
+        imageController.annotationOverlayMap = new HashMap<>();
 
         currentlySelectedItem = null;
         outputFileLocation = null;
@@ -72,9 +73,10 @@ public class Controller {
         annotationFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\X-69\\X-69_Annotate3.txt");
         annotationFileLabel.setText("Loaded annotation file: " + annotationFileLocation.toString());
         new Thread(new LoadAnnotationFile()).start();
-
+        /*
         outputFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\X-69\\Annotated2");
         outputDirectoryLabel.setText("Output file location: " + outputFileLocation.toString());
+        */
 
 
         selectedItemImageView.setImage(imageController.phImage);
@@ -169,6 +171,7 @@ public class Controller {
                                     itemPieces[4], itemPieces[5], itemPieces[6]);
                             item.removeUnderscoresFromCoordinateSystem();
                             annotationItems.add(item);
+                            imageController.annotationOverlayMap.put(item, imageController.createAnnotationOverlay(item));
                         }
                     }
                 } finally {
@@ -186,6 +189,7 @@ public class Controller {
         }
 
     }
+
 
     @FXML
     public void selectRightHandLogo() {
@@ -272,6 +276,7 @@ public class Controller {
         Image rightLogo;
         Image leftLogo;
         boolean rotateImages;
+        HashMap<AnnotationItem, BufferedImage> annotationOverlayMap;
 
         private Image loadSubSampledImage(AnnotationItem item) {
             File f = item.getFilepath().toFile();
@@ -363,10 +368,9 @@ public class Controller {
             return null;
         }
 
-
         private Image createPreviewImageFromItem(AnnotationItem item) {
             BufferedImage subImage = SwingFXUtils.fromFXImage(loadSubSampledImage(item), null);
-            BufferedImage overlayImage = createAnnotationOverlay(item);
+            BufferedImage overlayImage = annotationOverlayMap.get(item);//createAnnotationOverlay(item);
 
             float scaleFactor = (float) subImage.getWidth() / (float) overlayImage.getWidth();
 
@@ -402,6 +406,47 @@ public class Controller {
         }
 
         private Image createImageFromItem(AnnotationItem item) {
+            File f = item.getFilepath().toFile();
+            updateRotateImagesFromCheckbox();
+            try {
+                ImageInputStream imageInputStream = ImageIO.createImageInputStream(f);
+                ImageReader reader = ImageIO.getImageReadersByFormatName("jpg").next();
+                reader.setInput(imageInputStream, true);
+                BufferedImage inputImage = reader.read(0);
+
+                if (item.getImageRotated()) {
+                    BufferedImage tmp = new BufferedImage(inputImage.getWidth(), inputImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+                    Graphics2D g = tmp.createGraphics();
+                    g.rotate(Math.PI, inputImage.getWidth() / 2.0, inputImage.getHeight() / 2.0);
+                    g.drawImage(inputImage, 0, 0, null);
+                    inputImage = tmp;
+                    g.dispose();
+                }
+
+                imageInputStream.close();
+                reader.dispose();
+
+                BufferedImage overlayImage = annotationOverlayMap.get(item);
+
+                BufferedImage outputImage = new BufferedImage(inputImage.getWidth(), inputImage.getHeight() + overlayImage.getHeight(), BufferedImage.TYPE_INT_RGB);
+
+                Graphics2D graphics2D = outputImage.createGraphics();
+                graphics2D.drawImage(inputImage, 0, 0, null);
+                graphics2D.drawImage(overlayImage, 0, inputImage.getHeight(), null);
+                graphics2D.dispose();
+
+                return SwingFXUtils.toFXImage(outputImage, null);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+                System.err.println(e.getMessage() + " File in question: " + item.toString());
+            }
+
+            return null;
+
+        }
+
+        private Image createImageFromItem2(AnnotationItem item) {
             BufferedImage inputImage;
             try {
                 inputImage = ImageIO.read(item.getFilepath().toFile());
@@ -568,5 +613,6 @@ public class Controller {
                 clearAndUpdateProcess();
             }
         }
+
     }
 }
