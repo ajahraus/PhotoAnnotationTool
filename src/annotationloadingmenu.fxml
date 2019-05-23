@@ -47,7 +47,9 @@
                 <SplitPane dividerPositions="0.25" focusTraversable="true" prefWidth="300">
                     <items>
                         <VBox alignment="BOTTOM_CENTER">
-                            <ListView fx:id="annotationListView" prefWidth="200" VBox.vgrow="ALWAYS">
+                            <ListView fx:id="annotationListView" prefWidth="200" VBox.vgrow="ALWAYS"
+                                      onKeyReleased="#updateSelectedItem"
+                                      onMouseClicked="#updateSelectedItem">
                             </ListView>
                             <Button text="Export All Photos" onAction="#exportAllPhotos" VBox.vgrow="NEVER"
                                     alignment="BOTTOM_CENTER"/>

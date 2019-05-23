@@ -3,7 +3,6 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
 <BorderPane fx:controller="Controller" xmlns:fx="http://javafx.com/fxml">
     <top>
         <VBox spacing="10">
@@ -48,9 +47,12 @@
                 <SplitPane dividerPositions="0.25" focusTraversable="true" prefWidth="300">
                     <items>
                         <VBox alignment="BOTTOM_CENTER">
-                            <ListView fx:id="annotationListView" prefWidth="200" VBox.vgrow="ALWAYS">
+                            <ListView fx:id="annotationListView" prefWidth="200" VBox.vgrow="ALWAYS"
+                                      onKeyReleased="#updateSelectedItem"
+                                      onMouseClicked="#updateSelectedItem">
                             </ListView>
-                            <Button text="Export All Photos" onAction="#exportAllPhotos" VBox.vgrow="NEVER" alignment="BOTTOM_CENTER"/>
+                            <Button text="Export All Photos" onAction="#exportAllPhotos" VBox.vgrow="NEVER"
+                                    alignment="BOTTOM_CENTER"/>
                         </VBox>
                         <VBox alignment="TOP_CENTER">
                             <Label text="Image Preview">

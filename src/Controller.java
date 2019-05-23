@@ -7,7 +7,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -30,8 +29,6 @@ import java.util.List;
 
 public class Controller {
 
-    @FXML
-    Text outputText;
     @FXML
     Label outputDirectoryLabel;
     @FXML
