@@ -1,5 +1,7 @@
 import DataModel.AnnotationItem;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -77,6 +79,15 @@ public class Controller {
         outputFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\X-69\\Annotated2");
         outputDirectoryLabel.setText("Output file location: " + outputFileLocation.toString());
         */
+
+        annotationListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<AnnotationItem>() {
+            @Override
+            public void changed(ObservableValue<? extends AnnotationItem> observable, AnnotationItem oldValue, AnnotationItem newValue) {
+                if (newValue != null && currentlySelectedItem != null) {
+                    updateSelectedItem();
+                }
+            }
+        });
 
         selectedItemImageView.setImage(imageController.phImage);
         selectedItemImageView.preserveRatioProperty().setValue(true);
@@ -176,11 +187,16 @@ public class Controller {
                 } finally {
                     br.close();
 
+                    if (annotationItems.size() < 1) {
+                        Platform.runLater(() -> userMessagesTextArea.appendText("File either could not load or contained no usable images!\n"));
+                        clearAndUpdateProcess();
+                    } else {
 
-                    Platform.runLater(() -> annotationListView.getItems().setAll(annotationItems));
-                    Platform.runLater(() -> annotationListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE));
-                    Platform.runLater(() -> userMessagesTextArea.appendText("Loading annotation file... Complete!\n"));
-                    clearAndUpdateProcess();
+                        Platform.runLater(() -> annotationListView.getItems().setAll(annotationItems));
+                        Platform.runLater(() -> annotationListView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE));
+                        Platform.runLater(() -> userMessagesTextArea.appendText("Loading annotation file... Complete!\n"));
+                        clearAndUpdateProcess();
+                    }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -492,7 +508,7 @@ public class Controller {
         public class ExportAllPhotos extends ProcessingThread {
             @Override
             public void run() {
-                processName = "Exporting " + annotationItems.size() + "photos";
+                processName = "Exporting " + annotationItems.size() + " photos to " + outputFileLocation.toString();
                 processProgress = 0;
                 updateProcessAndWriteToMessageArea();
                 if (outputFileLocation == null) {
