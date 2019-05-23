@@ -69,15 +69,14 @@ public class Controller {
         outputFileLocation = null;
         updateRotateImagesFromCheckbox();
 
-
+        /*
         annotationFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\X-69\\X-69_Annotate3.txt");
         annotationFileLabel.setText("Loaded annotation file: " + annotationFileLocation.toString());
         new Thread(new LoadAnnotationFile()).start();
 
         outputFileLocation = Paths.get("Q:\\19-387\\TowerPhotos\\X-69\\Annotated2");
         outputDirectoryLabel.setText("Output file location: " + outputFileLocation.toString());
-
-
+        */
 
         selectedItemImageView.setImage(imageController.phImage);
         selectedItemImageView.preserveRatioProperty().setValue(true);
@@ -384,19 +383,6 @@ public class Controller {
             return SwingFXUtils.toFXImage(outputImage, null);
         }
 
-        private Image createPreviewImageFromItemAlt(AnnotationItem item) {
-            Image image = createImageFromItem(item);
-            java.awt.Image tmp = SwingFXUtils.fromFXImage(image, null).getScaledInstance((int) (image.getWidth() * (600 / image.getHeight())), 600, java.awt.Image.SCALE_SMOOTH);
-
-            BufferedImage dimg = new BufferedImage((int) (image.getWidth() * (600 / image.getHeight())), 600, BufferedImage.TYPE_INT_RGB);
-
-            Graphics2D graphics = dimg.createGraphics();
-            graphics.drawImage(tmp, 0, 0, null);
-            graphics.dispose();
-
-            return SwingFXUtils.toFXImage(dimg, null);
-        }
-
         private BufferedImage dropAlphaChannel(BufferedImage src) {
             BufferedImage convertedImg = new BufferedImage(src.getWidth(), src.getHeight(), BufferedImage.TYPE_INT_RGB);
             convertedImg.getGraphics().drawImage(src, 0, 0, null);
@@ -442,71 +428,6 @@ public class Controller {
             }
 
             return null;
-
-        }
-
-        private Image createImageFromItem2(AnnotationItem item) {
-            BufferedImage inputImage;
-            try {
-                inputImage = ImageIO.read(item.getFilepath().toFile());
-            } catch (IOException e) {
-                System.err.println(e.getMessage() + " File in question: " + item.toString());
-                e.printStackTrace();
-                return phImage;
-            }
-
-            item.setImageRotated(rotateImages);
-
-            if (rotateImages) {
-                BufferedImage rotatedInputImage = new BufferedImage(inputImage.getWidth(), inputImage.getHeight(), inputImage.getType());
-                int h = inputImage.getHeight();
-                int w = inputImage.getWidth();
-                for (int i = 0; i < w; i++) {
-                    for (int j = 0; j < h; j++) {
-                        rotatedInputImage.setRGB(w - i - 1, h - j - 1, inputImage.getRGB(i, j));
-                    }
-                }
-                inputImage = rotatedInputImage;
-            }
-            int logoHeight = 344;
-
-            BufferedImage tmp = new BufferedImage(inputImage.getWidth(), inputImage.getHeight() + 800, BufferedImage.TYPE_INT_RGB);
-            Graphics2D graphics = tmp.createGraphics();
-            graphics.setColor(Color.WHITE);
-            graphics.fillRect(0, inputImage.getHeight(), tmp.getWidth(), 800);
-            graphics.drawImage(inputImage, 0, 0, null);
-
-            java.awt.Image leftLogoTemp = SwingFXUtils.fromFXImage(leftLogo, null).getScaledInstance(
-                    logoHeight * (int) (leftLogo.getWidth() / leftLogo.getHeight()), logoHeight, java.awt.Image.SCALE_SMOOTH);
-            graphics.drawImage(leftLogoTemp, 0, inputImage.getHeight(), null);
-
-            java.awt.Image rightLogoTemp = SwingFXUtils.fromFXImage(rightLogo, null).getScaledInstance(
-                    logoHeight * (int) (rightLogo.getWidth() / rightLogo.getHeight()), logoHeight, java.awt.Image.SCALE_SMOOTH);
-            graphics.drawImage(rightLogoTemp, inputImage.getWidth() - rightLogoTemp.getWidth(null), inputImage.getHeight(), null);
-
-            graphics.setColor(Color.BLACK);
-            graphics.setFont(new Font("SansSerif", Font.BOLD, 80));
-            FontMetrics metrics = graphics.getFontMetrics(graphics.getFont());
-
-            // This nonsense is used to actually put the text where I want it to be on the image. The drawString location is
-            // always placed at the top right corner, so if you want the text to be centered, you have to calculate width of
-            // your text yourself and subtract it from the location it's being printed at.
-
-            // Centered on the top row
-            String line1 = "Line: " + item.getCircuitName() + "        " + "Structure: " + item.getStructureName();
-            graphics.drawString(line1, tmp.getWidth() / 2 - (metrics.stringWidth(line1) / 2), inputImage.getHeight() + 200);
-
-            // Centered on the middle row
-            String line2 = "E: " + item.getEasting() + "        " + "N: " + item.getNorthing();
-            graphics.drawString(line2, tmp.getWidth() / 2 - (metrics.stringWidth(line2) / 2), inputImage.getHeight() + 400);
-
-            // Centered on the bottom row
-            graphics.drawString(item.getCoordinateSystem(), tmp.getWidth() / 2 - (metrics.stringWidth(item.getCoordinateSystem()) / 2), inputImage.getHeight() + 600);
-
-            // Aligned to the right edge, side height at the bottom row
-            graphics.drawString(item.getDateString(), tmp.getWidth() - (metrics.stringWidth(item.getDateString()) + 100), inputImage.getHeight() + 600);
-
-            return SwingFXUtils.toFXImage(tmp, null);
 
         }
 
