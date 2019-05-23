@@ -1,7 +1,5 @@
 import DataModel.AnnotationItem;
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -80,12 +78,9 @@ public class Controller {
         outputDirectoryLabel.setText("Output file location: " + outputFileLocation.toString());
         */
 
-        annotationListView.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<AnnotationItem>() {
-            @Override
-            public void changed(ObservableValue<? extends AnnotationItem> observable, AnnotationItem oldValue, AnnotationItem newValue) {
-                if (newValue != null && currentlySelectedItem != null) {
-                    updateSelectedItem();
-                }
+        annotationListView.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null && currentlySelectedItem != null) {
+                updateSelectedItem();
             }
         });
 
