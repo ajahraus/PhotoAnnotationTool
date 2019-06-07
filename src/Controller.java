@@ -60,7 +60,7 @@ public class Controller {
         imageController.previewImageMap = new HashMap<>();
         imageController.rightLogo = new Image("ATC_Logo_Resized.jpg");
         imageController.leftLogo = new Image("LLC_Logo_Resized.jpg");
-        imageController.annotationOverlayMap = new HashMap<>();
+        // imageController.annotationOverlayMap = new HashMap<>();
 
         currentlySelectedItem = null;
         outputFileLocation = null;
@@ -173,7 +173,7 @@ public class Controller {
                                     itemPieces[4], itemPieces[5], itemPieces[6]);
                             item.removeUnderscoresFromCoordinateSystem();
                             annotationItems.add(item);
-                            imageController.annotationOverlayMap.put(item, imageController.createAnnotationOverlay(item));
+                            // imageController.annotationOverlayMap.put(item, imageController.createAnnotationOverlay(item));
                         }
                     }
                 } finally {
@@ -209,8 +209,18 @@ public class Controller {
         );
         java.io.File selectedFile = fileChooser.showOpenDialog(primaryStage);
 
-        if (selectedFile != null)
-            imageController.rightLogo = new Image(selectedFile.getPath());
+        if (selectedFile != null) {
+            try {
+                System.out.println(selectedFile.toString());
+                ImageInputStream imageInputStream = ImageIO.createImageInputStream(selectedFile);
+                ImageReader reader = ImageIO.getImageReadersByFormatName("jpg").next();
+                reader.setInput(imageInputStream, true);
+                BufferedImage logo = reader.read(0);
+                imageController.rightLogo = SwingFXUtils.toFXImage(logo, null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
@@ -225,8 +235,18 @@ public class Controller {
         );
         java.io.File selectedFile = fileChooser.showOpenDialog(primaryStage);
 
-        if (selectedFile != null)
-            imageController.leftLogo = new Image(selectedFile.getPath());
+        if (selectedFile != null) {
+            try {
+                System.out.println(selectedFile.toString());
+                ImageInputStream imageInputStream = ImageIO.createImageInputStream(selectedFile);
+                ImageReader reader = ImageIO.getImageReadersByFormatName("jpg").next();
+                reader.setInput(imageInputStream, true);
+                BufferedImage logo = reader.read(0);
+                imageController.leftLogo = SwingFXUtils.toFXImage(logo, null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @FXML
@@ -282,7 +302,7 @@ public class Controller {
         Image rightLogo;
         Image leftLogo;
         boolean rotateImages;
-        HashMap<AnnotationItem, BufferedImage> annotationOverlayMap;
+        // HashMap<AnnotationItem, BufferedImage> annotationOverlayMap;
 
         private Image loadSubSampledImage(AnnotationItem item) {
             File f = item.getFilepath().toFile();
@@ -376,7 +396,7 @@ public class Controller {
 
         private Image createPreviewImageFromItem(AnnotationItem item) {
             BufferedImage subImage = SwingFXUtils.fromFXImage(loadSubSampledImage(item), null);
-            BufferedImage overlayImage = annotationOverlayMap.get(item);//createAnnotationOverlay(item);
+            BufferedImage overlayImage = createAnnotationOverlay(item);
 
             float scaleFactor = (float) subImage.getWidth() / (float) overlayImage.getWidth();
 
@@ -419,7 +439,7 @@ public class Controller {
                 imageInputStream.close();
                 reader.dispose();
 
-                BufferedImage overlayImage = annotationOverlayMap.get(item);
+                BufferedImage overlayImage = createAnnotationOverlay(item);
 
                 BufferedImage outputImage = new BufferedImage(inputImage.getWidth(), inputImage.getHeight() + overlayImage.getHeight(), BufferedImage.TYPE_INT_RGB);
 
