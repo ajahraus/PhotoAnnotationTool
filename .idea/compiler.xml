@@ -12,7 +12,7 @@
       <entry name="!?*.kt" />
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
-    <bytecodeTargetLevel target="8">
+    <bytecodeTargetLevel target="10">
       <module name="PhotoAnnotationTool" target="" />
     </bytecodeTargetLevel>
   </component>
